@@ -8,10 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import com.zeropercenthappy.library.FullLLRVDecoration;
-import com.zeropercenthappy.library.FullVerGLRVDecoration;
-import com.zeropercenthappy.library.NormalLLRVDecoration;
-import com.zeropercenthappy.library.NormalVerGLRVDecoration;
+import com.zeropercenthappy.decorationlibrary.FullLLRVDecoration;
+import com.zeropercenthappy.decorationlibrary.FullVerGLRVDecoration;
+import com.zeropercenthappy.decorationlibrary.NormalLLRVDecoration;
+import com.zeropercenthappy.decorationlibrary.NormalVerGLRVDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == btnAdd) {
             entityList.add("");
-            rv.getAdapter().notifyDataSetChanged();
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+            }
         } else if (v == btnLinear) {
             rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             rv.removeItemDecoration(rv.getItemDecorationAt(0));

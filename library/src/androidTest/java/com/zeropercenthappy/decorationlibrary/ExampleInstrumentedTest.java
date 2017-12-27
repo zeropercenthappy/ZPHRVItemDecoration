@@ -1,4 +1,4 @@
-package com.zeropercenthappy.library;
+package com.zeropercenthappy.decorationlibrary;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

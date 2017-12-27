@@ -1,4 +1,4 @@
-package com.zeropercenthappy.library;
+package com.zeropercenthappy.decorationlibrary;
 
 import org.junit.Test;
 
