@@ -8,7 +8,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 /**
@@ -56,16 +55,26 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
 
     private void drawHorizontal(Canvas canvas, RecyclerView parent) {
         int childCount = parent.getChildCount();
+        int spanCount = getSpanCount(parent);
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
             //draw bottom
-            int bottomLeft = child.getLeft() - params.leftMargin - dividerSize;
-            int bottomRight = child.getRight() + params.rightMargin + dividerSize;
+            int bottomLeft = child.getLeft() - params.leftMargin;
+            int bottomRight = child.getRight() + params.rightMargin;
+            int bottomRightWithDivider = child.getRight() + params.rightMargin + dividerSize;
             int bottomTop = child.getBottom() + params.bottomMargin;
             int bottomBottom = bottomTop + dividerSize;
-            divider.setBounds(bottomLeft, bottomTop, bottomRight, bottomBottom);
-            divider.draw(canvas);
+
+            if (!Utils.isLastRow(i + 1, spanCount, childCount)) {
+                if (Utils.isLastColumn(i + 1, spanCount, childCount)) {
+                    divider.setBounds(bottomLeft, bottomTop, bottomRight, bottomBottom);
+                    divider.draw(canvas);
+                } else {
+                    divider.setBounds(bottomLeft, bottomTop, bottomRightWithDivider, bottomBottom);
+                    divider.draw(canvas);
+                }
+            }
         }
     }
 
@@ -78,10 +87,11 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
                     .getLayoutParams();
             //draw right
             int rightTop = child.getTop() - params.topMargin;
-            int rightBottom = child.getBottom() + params.bottomMargin + dividerSize;
+            int rightBottom = child.getBottom() + params.bottomMargin;
             int rightLeft = child.getRight() + params.rightMargin;
             int rightRight = rightLeft + dividerSize;
-            if ((i + 1) > spanCount || i != childCount - 1) {
+
+            if (!Utils.isLastColumn(i + 1, spanCount, childCount)) {
                 divider.setBounds(rightLeft, rightTop, rightRight, rightBottom);
                 divider.draw(canvas);
             }
@@ -113,11 +123,11 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
         } else {
             //多于一个
             if ((itemPosition) % spanCount == 0) {
-                //第一条竖线
+                //第一个item
                 leftOffset = 0;
                 rightOffset = (int) (dividerSize * ((spanCount - 1d) / spanCount));
             } else if ((itemPosition + 1) % spanCount == 0) {
-                //最后一条竖线
+                //最后一个item
                 leftOffset = (int) (dividerSize * ((spanCount - 1d) / spanCount));
                 rightOffset = 0;
             } else {
@@ -151,8 +161,6 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
-        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-            spanCount = ((StaggeredGridLayoutManager) layoutManager).getSpanCount();
         }
         return spanCount;
     }
