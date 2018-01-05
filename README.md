@@ -23,6 +23,9 @@ Step 1. Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 
 	dependencies {
-	        compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.1'
+	        compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.2'
 	}
 
+<b>Change log</b><br><br>
+<b>1.0.2</b><br>
+Support RecycleView set padding now.
