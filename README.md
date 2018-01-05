@@ -25,7 +25,8 @@ Step 2. Add the dependency
 	dependencies {
 	        compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.2'
 	}
-
-<b>Change log</b><br><br>
+<br>
+<br>
+<b>Change log</b><br>
 <b>1.0.2</b><br>
 Support RecycleView set padding now.
