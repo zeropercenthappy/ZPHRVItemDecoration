@@ -73,13 +73,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (v == btnLinear) {
             rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//            rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             rv.removeItemDecoration(rv.getItemDecorationAt(0));
             rv.addItemDecoration(new NormalLLRVDecoration(this, 10, R.color.colorAccent));
+//            rv.addItemDecoration(new NormalLLRVDecoration(this, 10, 5, R.color.colorAccent));
             rv.setAdapter(linearRVAdapter);
         } else if (v == btnLinearFullWrap) {
             rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//            rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             rv.removeItemDecoration(rv.getItemDecorationAt(0));
             rv.addItemDecoration(new FullLLRVDecoration(this, 10, R.color.colorAccent));
+//            rv.addItemDecoration(new FullLLRVDecoration(this, 10, 5, R.color.colorAccent));
             rv.setAdapter(linearRVAdapter);
         } else if (v == btnGrid) {
             rv.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));

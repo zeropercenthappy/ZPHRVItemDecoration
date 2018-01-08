@@ -69,6 +69,7 @@ recycleview.addItemDecoration(decoration);
 ````
 
 ## Change log
-
+### 1.0.3
+Fix build error
 ### 1.0.2
 Support RecycleView set padding now.
