@@ -64,7 +64,7 @@ recycleview.addItemDecoration(decoration);
 ### Step 2. Add the dependency
 ````
     dependencies {
-            compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.2'
+            compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.3'
     }
 ````
 
