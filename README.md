@@ -23,7 +23,7 @@ ItemDecoration for RecycleView with LinearLayoutManager or vertical GridLayoutma
 NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
-1. with decoration padding
+2. with decoration padding
 ```java
 NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, 5, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
@@ -34,7 +34,7 @@ recycleview.addItemDecoration(decoration);
 FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
-1. with decoration padding
+2. with decoration padding
 ```java
 FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, 5, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
