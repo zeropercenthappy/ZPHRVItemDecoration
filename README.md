@@ -20,33 +20,33 @@ ItemDecoration for RecycleView with LinearLayoutManager or vertical GridLayoutma
 
 1. without decoration padding
 ```java
-NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 20,  R.color.colorAccent);
+NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 1. with decoration padding
 ```java
-NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 20, 5, R.color.colorAccent);
+NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, 5, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 + ### LinearLayoutManager（Full wrap)
 1. without decoration padding
 ```java
-FullLLRVDecoration decoration = new FullLLRVDecoration(this, 20,  R.color.colorAccent);
+FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 1. with decoration padding
 ```java
-FullLLRVDecoration decoration = new FullLLRVDecoration(this, 20, 5, R.color.colorAccent);
+FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, 5, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 + ### GridLayoutManager
 ```java
-NormalVerGLRVDecoration decoration = new NormalVerGLRVDecoration(this, 20,  R.color.colorAccent);
+NormalVerGLRVDecoration decoration = new NormalVerGLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 + ### GridLayoutManager(Full wrap)
 ```java
-FullVerGLRVDecoration decoration = new FullVerGLRVDecoration(this, 20,  R.color.colorAccent);
+FullVerGLRVDecoration decoration = new FullVerGLRVDecoration(this, 10, R.color.colorAccent);
 recycleview.addItemDecoration(decoration);
 ```
 ---
