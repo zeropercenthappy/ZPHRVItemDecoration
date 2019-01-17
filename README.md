@@ -58,47 +58,47 @@ ItemDecoration for RecycleView with LinearLayoutManager or **vertical** GridLayo
 
 + GridLayoutManager
 
-```java
-NormalVerGLRVDecoration decoration = new NormalVerGLRVDecoration(this, 10, R.color.colorAccent);
-recycleview.addItemDecoration(decoration);
-```
+	```java
+	NormalVerGLRVDecoration decoration = new NormalVerGLRVDecoration(this, 10, R.color.colorAccent);
+	recycleview.addItemDecoration(decoration);
+	```
 
 + GridLayoutManager(Full wrap)
 
-```java
-FullVerGLRVDecoration decoration = new FullVerGLRVDecoration(this, 10, R.color.colorAccent);
-recycleview.addItemDecoration(decoration);
-```
+	```java
+	FullVerGLRVDecoration decoration = new FullVerGLRVDecoration(this, 10, R.color.colorAccent);
+	recycleview.addItemDecoration(decoration);
+	```
 
 ## Use:
 
 1. Add it in your root build.gradle at the end of repositories:
-```
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
+	```groovy
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+	```
 
 2. Add the dependency
-````
-dependencies {
-        compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.4'
-}
-````
+	````groovy
+	dependencies {
+		compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.4'
+	}
+	````
 
 ## Change log
 
 - 1.0.4
 
-Add sources jar
+	Add sources jar
 
 - 1.0.3
 
-Fix build error
+	Fix build error
 
--1.0.2
+- 1.0.2
 
-Support RecycleView set padding now.
+	Support RecycleView set padding now.
