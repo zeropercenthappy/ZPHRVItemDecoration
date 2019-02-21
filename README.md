@@ -85,7 +85,7 @@ ItemDecoration for RecycleView with LinearLayoutManager or **vertical** GridLayo
 2. Add the dependency
 	````groovy
 	dependencies {
-		compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.4'
+		compile 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.5'
 	}
 	````
 
