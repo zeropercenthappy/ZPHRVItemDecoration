@@ -5,7 +5,7 @@ package com.zeropercenthappy.decorationlibrary;
  * @date 2018/1/5
  */
 
-public class Utils {
+public class DecorationUtils {
     public static boolean isLastRow(int position, int spanCount, int total) {
         int lastRowFirstColumn =
                 total - (total % spanCount == 0 ? spanCount : total % spanCount) + 1;

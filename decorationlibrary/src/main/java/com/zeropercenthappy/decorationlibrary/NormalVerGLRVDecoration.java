@@ -66,8 +66,8 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
             int bottomTop = child.getBottom() + params.bottomMargin;
             int bottomBottom = bottomTop + dividerSize;
 
-            if (!Utils.isLastRow(i + 1, spanCount, childCount)) {
-                if (Utils.isLastColumn(i + 1, spanCount, childCount)) {
+            if (!DecorationUtils.isLastRow(i + 1, spanCount, childCount)) {
+                if (DecorationUtils.isLastColumn(i + 1, spanCount, childCount)) {
                     divider.setBounds(bottomLeft, bottomTop, bottomRight, bottomBottom);
                     divider.draw(canvas);
                 } else {
@@ -91,7 +91,7 @@ public class NormalVerGLRVDecoration extends RecyclerView.ItemDecoration {
             int rightLeft = child.getRight() + params.rightMargin;
             int rightRight = rightLeft + dividerSize;
 
-            if (!Utils.isLastColumn(i + 1, spanCount, childCount)) {
+            if (!DecorationUtils.isLastColumn(i + 1, spanCount, childCount)) {
                 divider.setBounds(rightLeft, rightTop, rightRight, rightBottom);
                 divider.draw(canvas);
             }
