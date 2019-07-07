@@ -1,5 +1,6 @@
 package com.zeropercenthappy.zphrvitemdecoration;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,10 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import com.zeropercenthappy.decorationlibrary.FullLLRVDecoration;
-import com.zeropercenthappy.decorationlibrary.FullVerGLRVDecoration;
-import com.zeropercenthappy.decorationlibrary.NormalLLRVDecoration;
-import com.zeropercenthappy.decorationlibrary.NormalVerGLRVDecoration;
+import com.zeropercenthappy.divider.GridLayoutManagerDivider;
+import com.zeropercenthappy.divider.LinearLayoutManagerDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnLinearFullWrap;
     private Button btnGrid;
     private Button btnGridFullWrap;
+    private Button btnMinus;
     private Button btnAdd;
     private RecyclerView rv;
 
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initData();
         initView();
-        initParam();
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv.setAdapter(linearRVAdapter);
     }
@@ -43,10 +42,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData() {
         entityList = new ArrayList<>();
         entityList.add("");
+        gridRVAdapter = new GridRVAdapter();
+        gridRVAdapter.setEntityList(entityList);
+        linearRVAdapter = new LinearRVAdapter();
+        linearRVAdapter.setEntityList(entityList);
     }
 
     private void initView() {
         rv = findViewById(R.id.rv);
+        btnMinus = findViewById(R.id.btn_minus);
+        btnMinus.setOnClickListener(this);
         btnAdd = findViewById(R.id.btn_add);
         btnAdd.setOnClickListener(this);
         btnLinear = findViewById(R.id.btn_linear);
@@ -59,51 +64,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGridFullWrap.setOnClickListener(this);
     }
 
-    private void initParam() {
-        gridRVAdapter = new GridRVAdapter();
-        gridRVAdapter.setEntityList(entityList);
-        linearRVAdapter = new LinearRVAdapter();
-        linearRVAdapter.setEntityList(entityList);
-    }
-
     @Override
     public void onClick(View v) {
-        if (v == btnAdd) {
+        if (v == btnMinus) {
+            if (entityList.size() > 0) {
+                entityList.remove(entityList.size() - 1);
+            }
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+            }
+        } else if (v == btnAdd) {
             entityList.add("");
             if (rv.getAdapter() != null) {
                 rv.getAdapter().notifyDataSetChanged();
             }
         } else if (v == btnLinear) {
             rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//            rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             if (rv.getItemDecorationCount() > 0) {
                 rv.removeItemDecoration(rv.getItemDecorationAt(0));
             }
-            rv.addItemDecoration(new NormalLLRVDecoration(this, 10, R.color.colorAccent));
-//            rv.addItemDecoration(new NormalLLRVDecoration(this, 10, 5, R.color.colorAccent));
+            rv.addItemDecoration(new LinearLayoutManagerDivider(Color.parseColor("#e69310"), 10, false));
             rv.setAdapter(linearRVAdapter);
         } else if (v == btnLinearFullWrap) {
             rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//            rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             if (rv.getItemDecorationCount() > 0) {
                 rv.removeItemDecoration(rv.getItemDecorationAt(0));
             }
-            rv.addItemDecoration(new FullLLRVDecoration(this, 10, R.color.colorAccent));
-//            rv.addItemDecoration(new FullLLRVDecoration(this, 10, 5, R.color.colorAccent));
+            rv.addItemDecoration(new LinearLayoutManagerDivider(Color.parseColor("#e69310"), 10));
             rv.setAdapter(linearRVAdapter);
         } else if (v == btnGrid) {
-            rv.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
+            rv.setLayoutManager(new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false));
             if (rv.getItemDecorationCount() > 0) {
                 rv.removeItemDecoration(rv.getItemDecorationAt(0));
             }
-            rv.addItemDecoration(new NormalVerGLRVDecoration(this, 10, R.color.colorAccent));
+            rv.addItemDecoration(new GridLayoutManagerDivider(Color.parseColor("#e69310"), 10, false));
             rv.setAdapter(gridRVAdapter);
         } else if (v == btnGridFullWrap) {
-            rv.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
+            rv.setLayoutManager(new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false));
             if (rv.getItemDecorationCount() > 0) {
                 rv.removeItemDecoration(rv.getItemDecorationAt(0));
             }
-            rv.addItemDecoration(new FullVerGLRVDecoration(this, 10, R.color.colorAccent));
+            rv.addItemDecoration(new GridLayoutManagerDivider(Color.parseColor("#e69310"), 10));
             rv.setAdapter(gridRVAdapter);
         }
     }

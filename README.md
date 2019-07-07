@@ -1,76 +1,80 @@
 # ZPHRVItemDecoration
 
-ItemDecoration for RecycleView with LinearLayoutManager or **vertical** GridLayoutmanager
-
----
-
-## Screenshot：
+## Divider
 
 - LinearLayoutManager
 
-	![LinearLayout](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/device-2017-12-27-100128.png)
+  - Usage
 
-- LinearLayoutManager(Full wrap)
+    - Full Wrap:
 
-	![LinearLayoutFullWrap](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/device-2017-12-27-100205.png)
+      ```java
+      LinearLayoutManagerDivider divider = new LinearLayoutManagerDivider(color, dividerWidth);
+      // if you have header view or footer view.
+      // it will not influence layout, only use for calculate.
+      divider.addHeaderView(headerView);
+      divider.addFooterView(footerView);
+      //
+      rv.addItemDecoration(divider);
+      ```
+
+      Screenshot:
+
+      ![LinearLayoutManagerFullwrap](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/LinearLayoutManagerDividerFullWrap.png)
+
+    - Not Full Wrap:
+
+      ```java
+      LinearLayoutManagerDivider divider = new LinearLayoutManagerDivider(color, dividerWidth, false);
+      // if you have header view or footer view.
+      // it will not influence layout, only use for calculate.
+      divider.addHeaderView(headerView);
+      divider.addFooterView(footerView);
+      //
+      rv.addItemDecoration(divider);
+      ```
+
+      Screenshot:
+
+      ![LinearLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/LinearLayoutManagerDivider.png)
 
 - GridLayoutManager
 
-	![GridLayout](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/device-2017-12-27-100219.png)
+  - Usage `(Current version only support Vertical orientation)`
 
-- GridLayoutManager(Full wrap)
+    - Full Wrap:
 
-	![GridLayoutFullWrap](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/device-2017-12-27-100232.png)
+      ```java
+      GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth);
+      // if you have header view or footer view.
+      // it will not influence layout, only use for calculate.
+      divider.addHeaderView(headerView);
+      divider.addFooterView(footerView);
+      //
+      rv.addItemDecoration(divider);
+      ```
 
-## Method:
+      Screenshot:
 
-+ LinearLayoutManager
+      ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDividerFullWrap.png)
 
-	1. without decoration padding
+    - Not Full Wrap:
 
-	```java
-	NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
+      ```java
+      GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
+      // if you have header view or footer view.
+      // it will not influence layout, only use for calculate.
+      divider.addHeaderView(headerView);
+      divider.addFooterView(footerView);
+      //
+      rv.addItemDecoration(divider);
+      ```
 
-	2. with decoration padding
+      Screenshot:
 
-	```java
-	NormalLLRVDecoration decoration = new NormalLLRVDecoration(this, 10, 5, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
+      ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
 
-+ LinearLayoutManager(Full wrap)
-
-	1. without decoration padding
-
-	```java
-	FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
-
-	2. with decoration padding
-
-	```java
-	FullLLRVDecoration decoration = new FullLLRVDecoration(this, 10, 5, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
-
-+ GridLayoutManager
-
-	```java
-	NormalVerGLRVDecoration decoration = new NormalVerGLRVDecoration(this, 10, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
-
-+ GridLayoutManager(Full wrap)
-
-	```java
-	FullVerGLRVDecoration decoration = new FullVerGLRVDecoration(this, 10, R.color.colorAccent);
-	recycleview.addItemDecoration(decoration);
-	```
-
-## Use:
+## Use
 
 1. Add it in your root build.gradle at the end of repositories:
 	```groovy
@@ -83,13 +87,17 @@ ItemDecoration for RecycleView with LinearLayoutManager or **vertical** GridLayo
 	```
 
 2. Add the dependency
-	````groovy
+	```groovy
 	dependencies {
-		implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.6'
+		implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.7'
 	}
-	````
+	```
 
 ## Change log
+
+- 1.0.7
+
+  Use kotlin to rewrite, rewrite all calculate logic, support to set header view and footer view.
 
 - 1.0.6
 

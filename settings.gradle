@@ -1,1 +1,1 @@
-include ':app', ':decorationlibrary'
+include ':app', ':library'
