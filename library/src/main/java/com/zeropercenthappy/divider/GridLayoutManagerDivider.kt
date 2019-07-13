@@ -37,6 +37,10 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
         }
     }
 
+    /**
+     * 每个item都画满宽度的线
+     * 以item的offset来决定最终显示出来的分割线
+     */
     private fun drawFullWrap(canvas: Canvas, parent: RecyclerView) {
         for (i in 0 until parent.childCount) {
             val childView = parent.getChildAt(i)
@@ -72,35 +76,51 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
     }
 
     private fun drawNotFullWrap(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val realItemCount = state.itemCount - headerViewList.size - footerViewList.size
-        val spanCount = getSpanCount(parent)
         for (i in 0 until parent.childCount) {
             val childView = parent.getChildAt(i)
             // HeaderView和FooterView不处理
             if (isHeader(childView) || isFooter(childView)) {
                 continue
             }
+            // 排除HeaderView和FooterView后，计算真实表格中的ChildView数量
+            val realItemCount = state.itemCount - headerViewList.size - footerViewList.size
+            val spanCount = getSpanCount(parent)
             // 找到当前ChildView在真实表格中的position（从1数起）
             val positionInGrid = parent.getChildLayoutPosition(childView) + 1 - headerViewList.size
-            // 绘制分割线
+            // 根据偏移量绘制分割线
+            val offsetRect = getNotFullWrapOffSets(positionInGrid, spanCount, realItemCount)
+            // 左边
+            canvas.drawRect((childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    childView.left.toFloat(),
+                    (childView.bottom + offsetRect.bottom).toFloat(),
+                    paint)
             // 右边
-            if (isLastColumn(positionInGrid, spanCount, realItemCount, false)) {
-                // 最后一列不绘制右边
-            } else {
+            // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
+//            if (positionInGrid != realItemCount) {
+                // 右边的分割线只在非最后一个item才绘制
                 canvas.drawRect(childView.right.toFloat(),
-                        childView.top.toFloat() - dividerWidth,
-                        childView.right.toFloat() + dividerWidth,
-                        childView.bottom.toFloat(),
+                        (childView.top - offsetRect.top).toFloat(),
+//                        (childView.right + offsetRect.right).toFloat(),
+                        (childView.right + dividerWidth).toFloat(),
+                        (childView.bottom + offsetRect.bottom).toFloat(),
                         paint)
-            }
+//            }
+            // 上边
+            // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
+            canvas.drawRect((childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    (childView.right + dividerWidth).toFloat(),
+                    childView.top.toFloat(),
+                    paint)
             // 下边
-            if (isLastRow(positionInGrid, spanCount, realItemCount)) {
-                // 最后一行不绘制下边
-            } else {
-                canvas.drawRect(childView.left.toFloat() - dividerWidth,
+            if (!isLastRow(positionInGrid, spanCount, realItemCount)) {
+                // 下边的分割线只在非最后一行才绘制
+                // 并且绘制满宽度分割线，以解决未排满spanCount时的分割线绘制不准确问题
+                canvas.drawRect((childView.left - offsetRect.left).toFloat(),
                         childView.bottom.toFloat(),
-                        childView.right.toFloat(),
-                        childView.bottom.toFloat() + dividerWidth,
+                        (childView.right + offsetRect.right).toFloat(),
+                        (childView.bottom + dividerWidth).toFloat(),
                         paint)
             }
         }
@@ -125,18 +145,18 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
         // 计算偏移量
         if (fullWrap) {
             outRect.set(getFullWrapOffsets(positionInGrid, spanCount, realItemCount))
-            // 第一次计算真实表格第二行第一个item的偏移量后，重新计算第一行的item的偏移量
-            // 因为第一行的item在第一次计算时，是当作同时是第一行和最后一行计算的
-            // 所以开始出现第二行时，要重新计算一次第一行
-            if (realItemCount == spanCount + 1) {
-                parent.postDelayed({
-                    for (i in headerViewList.size + 0 until headerViewList.size + spanCount) {
-                        parent.adapter.notifyItemChanged(i)
-                    }
-                }, 50)
-            }
         } else {
             outRect.set(getNotFullWrapOffSets(positionInGrid, spanCount, realItemCount))
+        }
+        // 第一次计算真实表格第二行第一个item的偏移量后，重新计算第一行的item的偏移量
+        // 因为第一行的item在第一次计算时，是当作同时是第一行和最后一行计算的
+        // 所以开始出现第二行时，要重新计算一次第一行
+        if (realItemCount == spanCount + 1) {
+            parent.postDelayed({
+                for (i in headerViewList.size + 0 until headerViewList.size + spanCount) {
+                    parent.adapter.notifyItemChanged(i)
+                }
+            }, 50)
         }
     }
 
@@ -198,16 +218,52 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
      */
     private fun getNotFullWrapOffSets(position: Int, spanCount: Int, total: Int): Rect {
         val rect = Rect()
+        val rowCount = getRowCount(spanCount, total)
+
         var leftOffset = 0
         var topOffset = 0
         var rightOffset = 0
         var bottomOffset = 0
+
         // 上下偏移量
-        topOffset = 0
-        bottomOffset = dividerWidth
+        if (isFirstRow(position, spanCount) && isLastRow(position, spanCount, total)) {
+            // 同时是第一行和最后一行，即只有一行
+            topOffset = 0
+            bottomOffset = 0
+        } else if (isFirstRow(position, spanCount)) {
+            // 第一行
+            topOffset = 0
+            bottomOffset = ((rowCount - 1f) / rowCount * dividerWidth).toInt()
+        } else if (isLastRow(position, spanCount, total)) {
+            // 最后一行
+            topOffset = ((rowCount - 1f) / rowCount * dividerWidth).toInt()
+            bottomOffset = 0
+        } else {
+            // 中间行
+            val atRow = atRow(position, spanCount)
+            topOffset = ((atRow - 1f) / rowCount * dividerWidth).toInt()
+            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * dividerWidth).toInt()
+        }
         // 左右偏移量
-        leftOffset = 0
-        rightOffset = dividerWidth
+        if (isFirstColum(position, spanCount) && isLastColumn(position, spanCount, total)) {
+            // 同时是第一列和最后一列，即只有一列
+            leftOffset = 0
+            rightOffset = 0
+        } else if (isFirstColum(position, spanCount)) {
+            // 第一列
+            leftOffset = 0
+            rightOffset = ((spanCount - 1f) / spanCount * dividerWidth).toInt()
+        } else if (isLastColumn(position, spanCount, total, false)) {
+            // 最后一列
+            leftOffset = ((spanCount - 1f) / spanCount * dividerWidth).toInt()
+            rightOffset = 0
+        } else {
+            // 中间列
+            val atColumn = atColumn(position, spanCount)
+            leftOffset = ((atColumn - 1f) / spanCount * dividerWidth).toInt()
+            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * dividerWidth).toInt()
+        }
+
         // 计算完毕
         rect.set(leftOffset, topOffset, rightOffset, bottomOffset)
         return rect

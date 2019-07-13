@@ -95,22 +95,26 @@
 
 ## Change log
 
+- 1.0.8
+
+  fix draw way of not full wrap style.
+
 - 1.0.7
 
   Use kotlin to rewrite, rewrite all calculate logic, support to set header view and footer view.
 
 - 1.0.6
 
-    Downgrade minSdkVersion to 14
+  Downgrade minSdkVersion to 14
 
 - 1.0.4
 
-	Add sources jar
+  Add sources jar
 
 - 1.0.3
 
-	Fix build error
+  Fix build error
 
 - 1.0.2
 
-	Support RecycleView set padding now.
+  Support RecycleView set padding now.

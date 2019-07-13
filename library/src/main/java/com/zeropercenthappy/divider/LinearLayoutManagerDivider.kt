@@ -38,6 +38,10 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         }
     }
 
+    /**
+     * 每个item都画满宽度的线
+     * 以item的offset来决定最终显示出来的分割线
+     */
     private fun drawFullWrap(canvas: Canvas, parent: RecyclerView) {
         for (i in 0 until parent.childCount) {
             val childView = parent.getChildAt(i)
@@ -75,41 +79,49 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         }
     }
 
+    /**
+     * 根据item的偏移量绘制分割线
+     */
     private fun drawNotFullWrap(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        // 计算真实item数量
-        val realItemCount = state.itemCount - headerViewList.size - footerViewList.size
         for (i in 0 until parent.childCount) {
             val childView = parent.getChildAt(i)
             // HeaderView和FooterView不处理
             if (isHeader(childView) || isFooter(childView)) {
                 continue
             }
+            // 排除HeaderView和FooterView后，计算真实列表中的ChildView数量
+            val realItemCount = state.itemCount - headerViewList.size - footerViewList.size
             // 找到当前ChildView在真实列表中的position（从1数起）
             val positionInLinear = parent.getChildLayoutPosition(childView) + 1 - headerViewList.size
+            // 根据偏移量绘制分割线
+            val offsetRect = getNotFullWrapOffsets(positionInLinear, realItemCount)
             if (orientation == LinearLayoutManager.VERTICAL) {
+                // 上边
+                canvas.drawRect(childView.left.toFloat(),
+                        (childView.top - offsetRect.top).toFloat(),
+                        childView.right.toFloat(),
+                        childView.top.toFloat(),
+                        paint)
                 // 下边
-                if (positionInLinear == realItemCount) {
-                    // 最后一个不绘制下边
-                } else {
-                    canvas.drawRect(childView.left.toFloat(),
-                            childView.bottom.toFloat(),
-                            childView.right.toFloat(),
-                            childView.bottom.toFloat() + dividerWidth,
-                            paint)
-                }
+                canvas.drawRect(childView.left.toFloat(),
+                        childView.bottom.toFloat(),
+                        childView.right.toFloat(),
+                        (childView.bottom + offsetRect.bottom).toFloat(),
+                        paint)
             } else {
+                // 左边
+                canvas.drawRect((childView.left - offsetRect.left).toFloat(),
+                        childView.top.toFloat(),
+                        childView.left.toFloat(),
+                        childView.bottom.toFloat(),
+                        paint)
                 // 右边
-                if (positionInLinear == realItemCount) {
-                    // 最后一个不绘制右边
-                } else {
-                    canvas.drawRect(childView.right.toFloat(),
-                            childView.top.toFloat(),
-                            childView.right.toFloat() + dividerWidth,
-                            childView.bottom.toFloat(),
-                            paint)
-                }
+                canvas.drawRect(childView.right.toFloat(),
+                        childView.top.toFloat(),
+                        (childView.right + offsetRect.right).toFloat(),
+                        childView.bottom.toFloat(),
+                        paint)
             }
-
         }
     }
 
@@ -132,18 +144,18 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         // 计算偏移量
         if (fullWrap) {
             outRect.set(getFullWrapOffsets(positionInLinear, realItemCount))
-            // 第一次第二行item的偏移量后，重新计算第一行的item的偏移量
-            // 因为第一行的item在第一次计算时，是当作同时是第一行和最后一行计算的
-            // 所以开始出现第二行时，要重新计算一次第一行
-            if (realItemCount == 2) {
-                parent.postDelayed({
-                    for (i in headerViewList.size + 0 until headerViewList.size + 1) {
-                        parent.adapter.notifyItemChanged(i)
-                    }
-                }, 50)
-            }
         } else {
-            outRect.set(getNotFullWrapOffsets())
+            outRect.set(getNotFullWrapOffsets(positionInLinear, realItemCount))
+        }
+        // 第一次第二行item的偏移量后，重新计算第一行的item的偏移量
+        // 因为第一行的item在第一次计算时，是当作同时是第一行和最后一行计算的
+        // 所以开始出现第二行时，要重新计算一次第一行
+        if (realItemCount == 2) {
+            parent.postDelayed({
+                for (i in headerViewList.size + 0 until headerViewList.size + 1) {
+                    parent.adapter.notifyItemChanged(i)
+                }
+            }, 50)
         }
     }
 
@@ -207,7 +219,7 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
     /**
      * 在真实列表中，非全包裹的分割线，计算指定position（从1开始）在列表中应该设置的偏移量
      */
-    private fun getNotFullWrapOffsets(): Rect {
+    private fun getNotFullWrapOffsets(position: Int, total: Int): Rect {
         val rect = Rect()
         var leftOffset = 0
         var topOffset = 0
@@ -215,12 +227,42 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         var bottomOffset = 0
         if (orientation == LinearLayoutManager.VERTICAL) {
             // 上下偏移量
-            topOffset = 0
-            bottomOffset = dividerWidth
+            if (total == 1) {
+                // 同时是第一行和最后一行，即只有一行
+                topOffset = 0
+                bottomOffset = 0
+            } else if (position == 1) {
+                // 第一行
+                topOffset = 0
+                bottomOffset = ((total - 1f) / total * dividerWidth).toInt()
+            } else if (position == total) {
+                // 最后一行
+                topOffset = ((total - 1f) / total * dividerWidth).toInt()
+                bottomOffset = 0
+            } else {
+                // 中间行
+                topOffset = ((position - 1f) / total * dividerWidth).toInt()
+                bottomOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).toInt()
+            }
         } else {
             // 左右偏移量
-            leftOffset = 0
-            rightOffset = dividerWidth
+            if (total == 1) {
+                // 同时是第一列和最后一列，即只有一列
+                leftOffset = 0
+                rightOffset = 0
+            } else if (position == 1) {
+                // 第一列
+                leftOffset = 0
+                rightOffset = ((total - 1f) / total * dividerWidth).toInt()
+            } else if (position == total) {
+                // 最后一列
+                leftOffset = ((total - 1f) / total * dividerWidth).toInt()
+                rightOffset = 0
+            } else {
+                // 中间列
+                leftOffset = ((position - 1f) / total * dividerWidth).toInt()
+                rightOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).toInt()
+            }
         }
         // 计算完毕
         rect.set(leftOffset, topOffset, rightOffset, bottomOffset)
