@@ -89,7 +89,7 @@
 2. Add the dependency
 	```groovy
 	dependencies {
-		implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.7'
+		implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.8'
 	}
 	```
 
