@@ -8,13 +8,18 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import kotlin.math.roundToInt
 
-class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
-                               private val dividerWidth: Int) : RecyclerView.ItemDecoration() {
+class GridLayoutManagerDivider(
+    @ColorInt dividerColor: Int,
+    private val dividerWidth: Int
+) : RecyclerView.ItemDecoration() {
 
-    constructor(@ColorInt dividerColor: Int,
-                dividerWidth: Int,
-                fullWrap: Boolean) : this(dividerColor, dividerWidth) {
+    constructor(
+        @ColorInt dividerColor: Int,
+        dividerWidth: Int,
+        fullWrap: Boolean
+    ) : this(dividerColor, dividerWidth) {
         this.fullWrap = fullWrap
     }
 
@@ -50,28 +55,36 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
             }
             // 绘制分割线
             // 左边
-            canvas.drawRect(childView.left.toFloat() - dividerWidth,
-                    childView.top.toFloat() - dividerWidth,
-                    childView.left.toFloat(),
-                    childView.bottom.toFloat() + dividerWidth,
-                    paint)
+            canvas.drawRect(
+                childView.left.toFloat() - dividerWidth,
+                childView.top.toFloat() - dividerWidth,
+                childView.left.toFloat(),
+                childView.bottom.toFloat() + dividerWidth,
+                paint
+            )
             // 上边
-            canvas.drawRect(childView.left.toFloat() - dividerWidth,
-                    childView.top.toFloat() - dividerWidth,
-                    childView.right.toFloat() + dividerWidth,
-                    childView.top.toFloat(), paint)
+            canvas.drawRect(
+                childView.left.toFloat() - dividerWidth,
+                childView.top.toFloat() - dividerWidth,
+                childView.right.toFloat() + dividerWidth,
+                childView.top.toFloat(), paint
+            )
             // 右边
-            canvas.drawRect(childView.right.toFloat(),
-                    childView.top.toFloat() - dividerWidth,
-                    childView.right.toFloat() + dividerWidth,
-                    childView.bottom.toFloat() + dividerWidth,
-                    paint)
+            canvas.drawRect(
+                childView.right.toFloat(),
+                childView.top.toFloat() - dividerWidth,
+                childView.right.toFloat() + dividerWidth,
+                childView.bottom.toFloat() + dividerWidth,
+                paint
+            )
             // 下边
-            canvas.drawRect(childView.left.toFloat() - dividerWidth,
-                    childView.bottom.toFloat(),
-                    childView.right.toFloat() + dividerWidth,
-                    childView.bottom.toFloat() + dividerWidth,
-                    paint)
+            canvas.drawRect(
+                childView.left.toFloat() - dividerWidth,
+                childView.bottom.toFloat(),
+                childView.right.toFloat() + dividerWidth,
+                childView.bottom.toFloat() + dividerWidth,
+                paint
+            )
         }
     }
 
@@ -90,46 +103,52 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
             // 根据偏移量绘制分割线
             val offsetRect = getNotFullWrapOffSets(positionInGrid, spanCount, realItemCount)
             // 左边
-            canvas.drawRect((childView.left - offsetRect.left).toFloat(),
-                    (childView.top - offsetRect.top).toFloat(),
-                    childView.left.toFloat(),
-                    (childView.bottom + offsetRect.bottom).toFloat(),
-                    paint)
+            canvas.drawRect(
+                (childView.left - offsetRect.left).toFloat(),
+                (childView.top - offsetRect.top).toFloat(),
+                childView.left.toFloat(),
+                (childView.bottom + offsetRect.bottom).toFloat(),
+                paint
+            )
             // 右边
             // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
-//            if (positionInGrid != realItemCount) {
-                // 右边的分割线只在非最后一个item才绘制
-                canvas.drawRect(childView.right.toFloat(),
-                        (childView.top - offsetRect.top).toFloat(),
+            // 右边的分割线只在非最后一个item才绘制
+            canvas.drawRect(
+                childView.right.toFloat(),
+                (childView.top - offsetRect.top).toFloat(),
 //                        (childView.right + offsetRect.right).toFloat(),
-                        (childView.right + dividerWidth).toFloat(),
-                        (childView.bottom + offsetRect.bottom).toFloat(),
-                        paint)
-//            }
+                (childView.right + dividerWidth).toFloat(),
+                (childView.bottom + offsetRect.bottom).toFloat(),
+                paint
+            )
             // 上边
             // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
-            canvas.drawRect((childView.left - offsetRect.left).toFloat(),
-                    (childView.top - offsetRect.top).toFloat(),
-                    (childView.right + dividerWidth).toFloat(),
-                    childView.top.toFloat(),
-                    paint)
+            canvas.drawRect(
+                (childView.left - offsetRect.left).toFloat(),
+                (childView.top - offsetRect.top).toFloat(),
+                (childView.right + dividerWidth).toFloat(),
+                childView.top.toFloat(),
+                paint
+            )
             // 下边
             if (!isLastRow(positionInGrid, spanCount, realItemCount)) {
                 // 下边的分割线只在非最后一行才绘制
                 // 并且绘制满宽度分割线，以解决未排满spanCount时的分割线绘制不准确问题
-                canvas.drawRect((childView.left - offsetRect.left).toFloat(),
-                        childView.bottom.toFloat(),
-                        (childView.right + offsetRect.right).toFloat(),
-                        (childView.bottom + dividerWidth).toFloat(),
-                        paint)
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    childView.bottom.toFloat(),
+                    (childView.right + offsetRect.right).toFloat(),
+                    (childView.bottom + dividerWidth).toFloat(),
+                    paint
+                )
             }
         }
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val layoutManager = parent.layoutManager
-        if (layoutManager !is GridLayoutManager || layoutManager.orientation != GridLayoutManager.VERTICAL) {
-            throw IllegalArgumentException("GridLayoutManagerDivider can only use with vertical GridLayoutManager")
+        require(!(layoutManager !is GridLayoutManager || layoutManager.orientation != GridLayoutManager.VERTICAL)) {
+            "GridLayoutManagerDivider can only use with vertical GridLayoutManager"
         }
         // HeaderView和FooterView不设置偏移量
         if (isHeader(view) || isFooter(view)) {
@@ -154,7 +173,7 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
         if (realItemCount == spanCount + 1) {
             parent.postDelayed({
                 for (i in headerViewList.size + 0 until headerViewList.size + spanCount) {
-                    parent.adapter.notifyItemChanged(i)
+                    parent.adapter?.notifyItemChanged(i)
                 }
             }, 50)
         }
@@ -178,35 +197,35 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
         } else if (isFirstRow(position, spanCount)) {
             // 第一行
             topOffset = dividerWidth
-            bottomOffset = (1f / rowCount * dividerWidth).toInt()
+            bottomOffset = (1f / rowCount * dividerWidth).roundToInt()
         } else if (isLastRow(position, spanCount, total)) {
             // 最后一行
-            topOffset = (1f / rowCount * dividerWidth).toInt()
+            topOffset = (1f / rowCount * dividerWidth).roundToInt()
             bottomOffset = dividerWidth
         } else {
             // 中间行
             val atRow = atRow(position, spanCount)
-            topOffset = ((rowCount + 1f - atRow) / rowCount * dividerWidth).toInt()
-            bottomOffset = (atRow.toFloat() / rowCount * dividerWidth).toInt()
+            topOffset = ((rowCount + 1f - atRow) / rowCount * dividerWidth).roundToInt()
+            bottomOffset = (atRow.toFloat() / rowCount * dividerWidth).roundToInt()
         }
         // 左右偏移量
-        if (isFirstColum(position, spanCount) && isLastColumn(position, spanCount, total)) {
+        if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
             // 同时是第一列和最后一列，即只有一列
             leftOffset = dividerWidth
             rightOffset = dividerWidth
-        } else if (isFirstColum(position, spanCount)) {
+        } else if (isFirstColumn(position, spanCount)) {
             // 第一列
             leftOffset = dividerWidth
-            rightOffset = (1f / spanCount * dividerWidth).toInt()
+            rightOffset = (1f / spanCount * dividerWidth).roundToInt()
         } else if (isLastColumn(position, spanCount, total, false)) {
             // 最后一列
-            leftOffset = (1f / spanCount * dividerWidth).toInt()
+            leftOffset = (1f / spanCount * dividerWidth).roundToInt()
             rightOffset = dividerWidth
         } else {
             // 中间列
             val atColumn = atColumn(position, spanCount)
-            leftOffset = ((spanCount + 1f - atColumn) / spanCount * dividerWidth).toInt()
-            rightOffset = (atColumn.toFloat() / spanCount * dividerWidth).toInt()
+            leftOffset = ((spanCount + 1f - atColumn) / spanCount * dividerWidth).roundToInt()
+            rightOffset = (atColumn.toFloat() / spanCount * dividerWidth).roundToInt()
         }
         // 计算完毕
         rect.set(leftOffset, topOffset, rightOffset, bottomOffset)
@@ -233,35 +252,35 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
         } else if (isFirstRow(position, spanCount)) {
             // 第一行
             topOffset = 0
-            bottomOffset = ((rowCount - 1f) / rowCount * dividerWidth).toInt()
+            bottomOffset = ((rowCount - 1f) / rowCount * dividerWidth).roundToInt()
         } else if (isLastRow(position, spanCount, total)) {
             // 最后一行
-            topOffset = ((rowCount - 1f) / rowCount * dividerWidth).toInt()
+            topOffset = ((rowCount - 1f) / rowCount * dividerWidth).roundToInt()
             bottomOffset = 0
         } else {
             // 中间行
             val atRow = atRow(position, spanCount)
-            topOffset = ((atRow - 1f) / rowCount * dividerWidth).toInt()
-            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * dividerWidth).toInt()
+            topOffset = ((atRow - 1f) / rowCount * dividerWidth).roundToInt()
+            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * dividerWidth).roundToInt()
         }
         // 左右偏移量
-        if (isFirstColum(position, spanCount) && isLastColumn(position, spanCount, total)) {
+        if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
             // 同时是第一列和最后一列，即只有一列
             leftOffset = 0
             rightOffset = 0
-        } else if (isFirstColum(position, spanCount)) {
+        } else if (isFirstColumn(position, spanCount)) {
             // 第一列
             leftOffset = 0
-            rightOffset = ((spanCount - 1f) / spanCount * dividerWidth).toInt()
+            rightOffset = ((spanCount - 1f) / spanCount * dividerWidth).roundToInt()
         } else if (isLastColumn(position, spanCount, total, false)) {
             // 最后一列
-            leftOffset = ((spanCount - 1f) / spanCount * dividerWidth).toInt()
+            leftOffset = ((spanCount - 1f) / spanCount * dividerWidth).roundToInt()
             rightOffset = 0
         } else {
             // 中间列
             val atColumn = atColumn(position, spanCount)
-            leftOffset = ((atColumn - 1f) / spanCount * dividerWidth).toInt()
-            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * dividerWidth).toInt()
+            leftOffset = ((atColumn - 1f) / spanCount * dividerWidth).roundToInt()
+            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * dividerWidth).roundToInt()
         }
 
         // 计算完毕
@@ -335,7 +354,7 @@ class GridLayoutManagerDivider(@ColorInt dividerColor: Int,
     /**
      * 在真实表格中，判断position（从1开始）是否在第一列
      */
-    private fun isFirstColum(position: Int, spanCount: Int): Boolean {
+    private fun isFirstColumn(position: Int, spanCount: Int): Boolean {
         return when (spanCount) {
             1 -> {
                 // 只有一列

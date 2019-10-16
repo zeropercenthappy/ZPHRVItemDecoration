@@ -8,13 +8,18 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import kotlin.math.roundToInt
 
-class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
-                                 private val dividerWidth: Int) : RecyclerView.ItemDecoration() {
+class LinearLayoutManagerDivider(
+    @ColorInt dividerColor: Int,
+    private val dividerWidth: Int
+) : RecyclerView.ItemDecoration() {
 
-    constructor(@ColorInt dividerColor: Int,
-                dividerWidth: Int,
-                fullWrap: Boolean) : this(dividerColor, dividerWidth) {
+    constructor(
+        @ColorInt dividerColor: Int,
+        dividerWidth: Int,
+        fullWrap: Boolean
+    ) : this(dividerColor, dividerWidth) {
         this.fullWrap = fullWrap
     }
 
@@ -52,29 +57,37 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
             // 绘制分割线
             if (orientation == LinearLayoutManager.VERTICAL) {
                 // 上边
-                canvas.drawRect(childView.left.toFloat(),
-                        childView.top.toFloat() - dividerWidth,
-                        childView.right.toFloat(),
-                        childView.top.toFloat(), paint)
+                canvas.drawRect(
+                    childView.left.toFloat(),
+                    childView.top.toFloat() - dividerWidth,
+                    childView.right.toFloat(),
+                    childView.top.toFloat(), paint
+                )
                 // 下边
-                canvas.drawRect(childView.left.toFloat(),
-                        childView.bottom.toFloat(),
-                        childView.right.toFloat(),
-                        childView.bottom.toFloat() + dividerWidth,
-                        paint)
+                canvas.drawRect(
+                    childView.left.toFloat(),
+                    childView.bottom.toFloat(),
+                    childView.right.toFloat(),
+                    childView.bottom.toFloat() + dividerWidth,
+                    paint
+                )
             } else {
                 // 左边
-                canvas.drawRect(childView.left.toFloat() - dividerWidth,
-                        childView.top.toFloat(),
-                        childView.left.toFloat(),
-                        childView.bottom.toFloat(),
-                        paint)
+                canvas.drawRect(
+                    childView.left.toFloat() - dividerWidth,
+                    childView.top.toFloat(),
+                    childView.left.toFloat(),
+                    childView.bottom.toFloat(),
+                    paint
+                )
                 // 右边
-                canvas.drawRect(childView.right.toFloat(),
-                        childView.top.toFloat(),
-                        childView.right.toFloat() + dividerWidth,
-                        childView.bottom.toFloat(),
-                        paint)
+                canvas.drawRect(
+                    childView.right.toFloat(),
+                    childView.top.toFloat(),
+                    childView.right.toFloat() + dividerWidth,
+                    childView.bottom.toFloat(),
+                    paint
+                )
             }
         }
     }
@@ -97,41 +110,48 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
             val offsetRect = getNotFullWrapOffsets(positionInLinear, realItemCount)
             if (orientation == LinearLayoutManager.VERTICAL) {
                 // 上边
-                canvas.drawRect(childView.left.toFloat(),
-                        (childView.top - offsetRect.top).toFloat(),
-                        childView.right.toFloat(),
-                        childView.top.toFloat(),
-                        paint)
+                canvas.drawRect(
+                    childView.left.toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    childView.right.toFloat(),
+                    childView.top.toFloat(),
+                    paint
+                )
                 // 下边
-                canvas.drawRect(childView.left.toFloat(),
-                        childView.bottom.toFloat(),
-                        childView.right.toFloat(),
-                        (childView.bottom + offsetRect.bottom).toFloat(),
-                        paint)
+                canvas.drawRect(
+                    childView.left.toFloat(),
+                    childView.bottom.toFloat(),
+                    childView.right.toFloat(),
+                    (childView.bottom + offsetRect.bottom).toFloat(),
+                    paint
+                )
             } else {
                 // 左边
-                canvas.drawRect((childView.left - offsetRect.left).toFloat(),
-                        childView.top.toFloat(),
-                        childView.left.toFloat(),
-                        childView.bottom.toFloat(),
-                        paint)
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    childView.top.toFloat(),
+                    childView.left.toFloat(),
+                    childView.bottom.toFloat(),
+                    paint
+                )
                 // 右边
-                canvas.drawRect(childView.right.toFloat(),
-                        childView.top.toFloat(),
-                        (childView.right + offsetRect.right).toFloat(),
-                        childView.bottom.toFloat(),
-                        paint)
+                canvas.drawRect(
+                    childView.right.toFloat(),
+                    childView.top.toFloat(),
+                    (childView.right + offsetRect.right).toFloat(),
+                    childView.bottom.toFloat(),
+                    paint
+                )
             }
         }
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val layoutManager = parent.layoutManager
-        if (layoutManager !is LinearLayoutManager) {
-            throw IllegalArgumentException("LinearLayoutManagerDivider can only use with LinearLayoutManager")
-        } else {
-            orientation = layoutManager.orientation
+        require(layoutManager is LinearLayoutManager) {
+            "LinearLayoutManagerDivider can only use with LinearLayoutManager"
         }
+        orientation = layoutManager.orientation
         // HeaderView和FooterView不设置偏移量
         if (isHeader(view) || isFooter(view)) {
             outRect.set(0, 0, 0, 0)
@@ -153,7 +173,7 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         if (realItemCount == 2) {
             parent.postDelayed({
                 for (i in headerViewList.size + 0 until headerViewList.size + 1) {
-                    parent.adapter.notifyItemChanged(i)
+                    parent.adapter?.notifyItemChanged(i)
                 }
             }, 50)
         }
@@ -183,32 +203,32 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
             if (orientation == LinearLayoutManager.VERTICAL) {
                 // 第一行
                 topOffset = dividerWidth
-                bottomOffset = (1f / total * dividerWidth).toInt()
+                bottomOffset = (1f / total * dividerWidth).roundToInt()
             } else {
                 // 第一列
                 leftOffset = dividerWidth
-                rightOffset = (1f / total * dividerWidth).toInt()
+                rightOffset = (1f / total * dividerWidth).roundToInt()
             }
 
         } else if (position == total) {
             if (orientation == LinearLayoutManager.VERTICAL) {
                 // 最后一行
-                topOffset = (1f / total * dividerWidth).toInt()
+                topOffset = (1f / total * dividerWidth).roundToInt()
                 bottomOffset = dividerWidth
             } else {
                 // 最后一列
-                leftOffset = (1f / total * dividerWidth).toInt()
+                leftOffset = (1f / total * dividerWidth).roundToInt()
                 rightOffset = dividerWidth
             }
         } else {
             if (orientation == LinearLayoutManager.VERTICAL) {
                 // 中间行
-                topOffset = ((total + 1f - position) / total * dividerWidth).toInt()
-                bottomOffset = (position.toFloat() / total * dividerWidth).toInt()
+                topOffset = ((total + 1f - position) / total * dividerWidth).roundToInt()
+                bottomOffset = (position.toFloat() / total * dividerWidth).roundToInt()
             } else {
                 // 中间列
-                leftOffset = ((total + 1f - position) / total * dividerWidth).toInt()
-                rightOffset = (position.toFloat() / total * dividerWidth).toInt()
+                leftOffset = ((total + 1f - position) / total * dividerWidth).roundToInt()
+                rightOffset = (position.toFloat() / total * dividerWidth).roundToInt()
             }
         }
         // 计算完毕
@@ -227,41 +247,51 @@ class LinearLayoutManagerDivider(@ColorInt dividerColor: Int,
         var bottomOffset = 0
         if (orientation == LinearLayoutManager.VERTICAL) {
             // 上下偏移量
-            if (total == 1) {
-                // 同时是第一行和最后一行，即只有一行
-                topOffset = 0
-                bottomOffset = 0
-            } else if (position == 1) {
-                // 第一行
-                topOffset = 0
-                bottomOffset = ((total - 1f) / total * dividerWidth).toInt()
-            } else if (position == total) {
-                // 最后一行
-                topOffset = ((total - 1f) / total * dividerWidth).toInt()
-                bottomOffset = 0
-            } else {
-                // 中间行
-                topOffset = ((position - 1f) / total * dividerWidth).toInt()
-                bottomOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).toInt()
+            when {
+                total == 1 -> {
+                    // 同时是第一行和最后一行，即只有一行
+                    topOffset = 0
+                    bottomOffset = 0
+                }
+                position == 1 -> {
+                    // 第一行
+                    topOffset = 0
+                    bottomOffset = ((total - 1f) / total * dividerWidth).roundToInt()
+                }
+                position == total -> {
+                    // 最后一行
+                    topOffset = ((total - 1f) / total * dividerWidth).roundToInt()
+                    bottomOffset = 0
+                }
+                else -> {
+                    // 中间行
+                    topOffset = ((position - 1f) / total * dividerWidth).roundToInt()
+                    bottomOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
+                }
             }
         } else {
             // 左右偏移量
-            if (total == 1) {
-                // 同时是第一列和最后一列，即只有一列
-                leftOffset = 0
-                rightOffset = 0
-            } else if (position == 1) {
-                // 第一列
-                leftOffset = 0
-                rightOffset = ((total - 1f) / total * dividerWidth).toInt()
-            } else if (position == total) {
-                // 最后一列
-                leftOffset = ((total - 1f) / total * dividerWidth).toInt()
-                rightOffset = 0
-            } else {
-                // 中间列
-                leftOffset = ((position - 1f) / total * dividerWidth).toInt()
-                rightOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).toInt()
+            when {
+                total == 1 -> {
+                    // 同时是第一列和最后一列，即只有一列
+                    leftOffset = 0
+                    rightOffset = 0
+                }
+                position == 1 -> {
+                    // 第一列
+                    leftOffset = 0
+                    rightOffset = ((total - 1f) / total * dividerWidth).roundToInt()
+                }
+                position == total -> {
+                    // 最后一列
+                    leftOffset = ((total - 1f) / total * dividerWidth).roundToInt()
+                    rightOffset = 0
+                }
+                else -> {
+                    // 中间列
+                    leftOffset = ((position - 1f) / total * dividerWidth).roundToInt()
+                    rightOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
+                }
             }
         }
         // 计算完毕
