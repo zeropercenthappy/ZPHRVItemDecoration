@@ -116,7 +116,6 @@ class GridLayoutManagerDivider(
             canvas.drawRect(
                 childView.right.toFloat(),
                 (childView.top - offsetRect.top).toFloat(),
-//                        (childView.right + offsetRect.right).toFloat(),
                 (childView.right + dividerWidth).toFloat(),
                 (childView.bottom + offsetRect.bottom).toFloat(),
                 paint
@@ -147,7 +146,7 @@ class GridLayoutManagerDivider(
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val layoutManager = parent.layoutManager
-        require(!(layoutManager !is GridLayoutManager || layoutManager.orientation != GridLayoutManager.VERTICAL)) {
+        require(layoutManager is GridLayoutManager && layoutManager.orientation == GridLayoutManager.VERTICAL) {
             "GridLayoutManagerDivider can only use with vertical GridLayoutManager"
         }
         // HeaderView和FooterView不设置偏移量
