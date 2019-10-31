@@ -1,17 +1,17 @@
-# ZPHRVItemDecoration [简体中文](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/README_CN.md)
+# ZPHRVItemDecoration
 
-## Divider
+## 分割线
 
 ### LinearLayoutManager
 
-#### Usage
+#### 用法
 
-- Full Wrap:
+- 全包裹:
 
   ```java
   LinearLayoutManagerDivider divider = new LinearLayoutManagerDivider(color, dividerWidth);
-  // if you have header view or footer view.
-  // it will not influence layout, only use for calculate.
+  // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
+  // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
@@ -20,12 +20,12 @@
 
   ![LinearLayoutManagerFullwrap](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/LinearLayoutManagerDividerFullWrap.png)
 
-- Not Full Wrap:
+- 非全包裹:
 
   ```java
   LinearLayoutManagerDivider divider = new LinearLayoutManagerDivider(color, dividerWidth, false);
-  // if you have header view or footer view.
-  // it will not influence layout, only use for calculate.
+  // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
+  // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
@@ -36,14 +36,14 @@
 
 ### GridLayoutManager
 
-#### Usage (Current version only support `Vertical` `GridLayoutManager`)
+#### 用法 (当前仅支持`Vertical`方向的`GridLayoutManager`绘制分割线)
 
 - Full Wrap:
 
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth);
-  // if you have header view or footer view.
-  // it will not influence layout, only use for calculate.
+  // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
+  // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
@@ -56,8 +56,8 @@
 
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
-  // if you have header view or footer view.
-  // it will not influence layout, only use for calculate.
+  // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
+  // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
@@ -66,11 +66,11 @@
 
   ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
 
-## Download
+## 下载
 
-### Step 1.
+### 步骤 1.
 
-Add it in your root build.gradle at the end of repositories:
+添加以下配置到项目根目录位置的build.gradle：
 
 ```groovy
 allprojects {
@@ -81,9 +81,9 @@ allprojects {
 }
 ```
 
-### Step 2.
+### 步骤 2.
 
-Add the dependency in your module's build.gradle:
+在Module目录下的build.gradle文件内添加依赖：
 
 ```groovy
 dependencies {
@@ -91,7 +91,7 @@ dependencies {
 }
 ```
 
-## Change log
+## 更新日志
 
 - 1.0.8
 
