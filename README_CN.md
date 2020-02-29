@@ -42,6 +42,8 @@
 
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth);
+  // 如果你想为横向和竖向的分割线设置不同的size：
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, true);
   // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
   // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
@@ -56,14 +58,16 @@
 
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
+  // 如果你想为横向和竖向的分割线设置不同的size：
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, false);
   // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
   // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
-  rv.addItemDecoration(divider);
+rv.addItemDecoration(divider);
   ```
-
+  
   ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
 
 ## 下载
@@ -87,11 +91,15 @@ allprojects {
 
 ```groovy
 dependencies {
-	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.8'
+	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
 }
 ```
 
 ## 更新日志
+
+- 1.0.9
+
+  Support different size of horizontal and vertical divider for GridLayoutManager.
 
 - 1.0.8
 

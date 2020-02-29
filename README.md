@@ -41,7 +41,9 @@
 - Full Wrap:
 
   ```java
-  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth);
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, true);
+  // if you want to set a different size of divider:
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, true);
   // if you have header view or footer view.
   // it will not influence layout, only use for calculate.
   divider.addHeaderView(headerView);
@@ -56,12 +58,14 @@
 
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
+  // if you want to set a different size of divider:
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, false);
   // if you have header view or footer view.
   // it will not influence layout, only use for calculate.
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
-  rv.addItemDecoration(divider);
+rv.addItemDecoration(divider);
   ```
 
   ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
@@ -87,11 +91,15 @@ Add the dependency in your module's build.gradle:
 
 ```groovy
 dependencies {
-	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.8'
+	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
 }
 ```
 
 ## Change log
+
+- 1.0.9
+
+  Support different size of horizontal and vertical divider for GridLayoutManager.
 
 - 1.0.8
 
