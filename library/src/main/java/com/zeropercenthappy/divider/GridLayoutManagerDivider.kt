@@ -12,21 +12,21 @@ import kotlin.math.roundToInt
 
 class GridLayoutManagerDivider(
     @ColorInt dividerColor: Int,
-    private val dividerWidth: Int
+    private val horizontalDividerHeight: Int,
+    private val verticalDividerWidth: Int,
+    private val fullWrap: Boolean
 ) : RecyclerView.ItemDecoration() {
+
 
     constructor(
         @ColorInt dividerColor: Int,
-        dividerWidth: Int,
+        dividerSize: Int,
         fullWrap: Boolean
-    ) : this(dividerColor, dividerWidth) {
-        this.fullWrap = fullWrap
-    }
+    ) : this(dividerColor, dividerSize, dividerSize, fullWrap)
 
     private val paint: Paint = Paint()
     private val headerViewList = arrayListOf<View>()
     private val footerViewList = arrayListOf<View>()
-    private var fullWrap = true
 
     init {
         paint.isAntiAlias = true
@@ -56,33 +56,33 @@ class GridLayoutManagerDivider(
             // 绘制分割线
             // 左边
             canvas.drawRect(
-                childView.left.toFloat() - dividerWidth,
-                childView.top.toFloat() - dividerWidth,
+                childView.left.toFloat() - verticalDividerWidth,
+                childView.top.toFloat() - horizontalDividerHeight,
                 childView.left.toFloat(),
-                childView.bottom.toFloat() + dividerWidth,
+                childView.bottom.toFloat() + horizontalDividerHeight,
                 paint
             )
             // 上边
             canvas.drawRect(
-                childView.left.toFloat() - dividerWidth,
-                childView.top.toFloat() - dividerWidth,
-                childView.right.toFloat() + dividerWidth,
+                childView.left.toFloat() - verticalDividerWidth,
+                childView.top.toFloat() - horizontalDividerHeight,
+                childView.right.toFloat() + verticalDividerWidth,
                 childView.top.toFloat(), paint
             )
             // 右边
             canvas.drawRect(
                 childView.right.toFloat(),
-                childView.top.toFloat() - dividerWidth,
-                childView.right.toFloat() + dividerWidth,
-                childView.bottom.toFloat() + dividerWidth,
+                childView.top.toFloat() - horizontalDividerHeight,
+                childView.right.toFloat() + verticalDividerWidth,
+                childView.bottom.toFloat() + horizontalDividerHeight,
                 paint
             )
             // 下边
             canvas.drawRect(
-                childView.left.toFloat() - dividerWidth,
+                childView.left.toFloat() - verticalDividerWidth,
                 childView.bottom.toFloat(),
-                childView.right.toFloat() + dividerWidth,
-                childView.bottom.toFloat() + dividerWidth,
+                childView.right.toFloat() + verticalDividerWidth,
+                childView.bottom.toFloat() + horizontalDividerHeight,
                 paint
             )
         }
@@ -116,7 +116,7 @@ class GridLayoutManagerDivider(
             canvas.drawRect(
                 childView.right.toFloat(),
                 (childView.top - offsetRect.top).toFloat(),
-                (childView.right + dividerWidth).toFloat(),
+                (childView.right + verticalDividerWidth).toFloat(),
                 (childView.bottom + offsetRect.bottom).toFloat(),
                 paint
             )
@@ -125,7 +125,7 @@ class GridLayoutManagerDivider(
             canvas.drawRect(
                 (childView.left - offsetRect.left).toFloat(),
                 (childView.top - offsetRect.top).toFloat(),
-                (childView.right + dividerWidth).toFloat(),
+                (childView.right + horizontalDividerHeight).toFloat(),
                 childView.top.toFloat(),
                 paint
             )
@@ -137,7 +137,7 @@ class GridLayoutManagerDivider(
                     (childView.left - offsetRect.left).toFloat(),
                     childView.bottom.toFloat(),
                     (childView.right + offsetRect.right).toFloat(),
-                    (childView.bottom + dividerWidth).toFloat(),
+                    (childView.bottom + horizontalDividerHeight).toFloat(),
                     paint
                 )
             }
@@ -191,40 +191,40 @@ class GridLayoutManagerDivider(
         // 上下偏移量
         if (isFirstRow(position, spanCount) && isLastRow(position, spanCount, total)) {
             // 同时是第一行和最后一行，即只有一行
-            topOffset = dividerWidth
-            bottomOffset = dividerWidth
+            topOffset = horizontalDividerHeight
+            bottomOffset = horizontalDividerHeight
         } else if (isFirstRow(position, spanCount)) {
             // 第一行
-            topOffset = dividerWidth
-            bottomOffset = (1f / rowCount * dividerWidth).roundToInt()
+            topOffset = horizontalDividerHeight
+            bottomOffset = (1f / rowCount * horizontalDividerHeight).roundToInt()
         } else if (isLastRow(position, spanCount, total)) {
             // 最后一行
-            topOffset = (1f / rowCount * dividerWidth).roundToInt()
-            bottomOffset = dividerWidth
+            topOffset = (1f / rowCount * horizontalDividerHeight).roundToInt()
+            bottomOffset = horizontalDividerHeight
         } else {
             // 中间行
             val atRow = atRow(position, spanCount)
-            topOffset = ((rowCount + 1f - atRow) / rowCount * dividerWidth).roundToInt()
-            bottomOffset = (atRow.toFloat() / rowCount * dividerWidth).roundToInt()
+            topOffset = ((rowCount + 1f - atRow) / rowCount * horizontalDividerHeight).roundToInt()
+            bottomOffset = (atRow.toFloat() / rowCount * horizontalDividerHeight).roundToInt()
         }
         // 左右偏移量
         if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
             // 同时是第一列和最后一列，即只有一列
-            leftOffset = dividerWidth
-            rightOffset = dividerWidth
+            leftOffset = verticalDividerWidth
+            rightOffset = verticalDividerWidth
         } else if (isFirstColumn(position, spanCount)) {
             // 第一列
-            leftOffset = dividerWidth
-            rightOffset = (1f / spanCount * dividerWidth).roundToInt()
+            leftOffset = verticalDividerWidth
+            rightOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
         } else if (isLastColumn(position, spanCount, total, false)) {
             // 最后一列
-            leftOffset = (1f / spanCount * dividerWidth).roundToInt()
-            rightOffset = dividerWidth
+            leftOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
+            rightOffset = verticalDividerWidth
         } else {
             // 中间列
             val atColumn = atColumn(position, spanCount)
-            leftOffset = ((spanCount + 1f - atColumn) / spanCount * dividerWidth).roundToInt()
-            rightOffset = (atColumn.toFloat() / spanCount * dividerWidth).roundToInt()
+            leftOffset = ((spanCount + 1f - atColumn) / spanCount * verticalDividerWidth).roundToInt()
+            rightOffset = (atColumn.toFloat() / spanCount * verticalDividerWidth).roundToInt()
         }
         // 计算完毕
         rect.set(leftOffset, topOffset, rightOffset, bottomOffset)
@@ -251,16 +251,16 @@ class GridLayoutManagerDivider(
         } else if (isFirstRow(position, spanCount)) {
             // 第一行
             topOffset = 0
-            bottomOffset = ((rowCount - 1f) / rowCount * dividerWidth).roundToInt()
+            bottomOffset = ((rowCount - 1f) / rowCount * horizontalDividerHeight).roundToInt()
         } else if (isLastRow(position, spanCount, total)) {
             // 最后一行
-            topOffset = ((rowCount - 1f) / rowCount * dividerWidth).roundToInt()
+            topOffset = ((rowCount - 1f) / rowCount * horizontalDividerHeight).roundToInt()
             bottomOffset = 0
         } else {
             // 中间行
             val atRow = atRow(position, spanCount)
-            topOffset = ((atRow - 1f) / rowCount * dividerWidth).roundToInt()
-            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * dividerWidth).roundToInt()
+            topOffset = ((atRow - 1f) / rowCount * horizontalDividerHeight).roundToInt()
+            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * horizontalDividerHeight).roundToInt()
         }
         // 左右偏移量
         if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
@@ -270,16 +270,16 @@ class GridLayoutManagerDivider(
         } else if (isFirstColumn(position, spanCount)) {
             // 第一列
             leftOffset = 0
-            rightOffset = ((spanCount - 1f) / spanCount * dividerWidth).roundToInt()
+            rightOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
         } else if (isLastColumn(position, spanCount, total, false)) {
             // 最后一列
-            leftOffset = ((spanCount - 1f) / spanCount * dividerWidth).roundToInt()
+            leftOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
             rightOffset = 0
         } else {
             // 中间列
             val atColumn = atColumn(position, spanCount)
-            leftOffset = ((atColumn - 1f) / spanCount * dividerWidth).roundToInt()
-            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * dividerWidth).roundToInt()
+            leftOffset = ((atColumn - 1f) / spanCount * verticalDividerWidth).roundToInt()
+            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * verticalDividerWidth).roundToInt()
         }
 
         // 计算完毕

@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (rv.getItemDecorationCount() > 0) {
                 rv.removeItemDecoration(rv.getItemDecorationAt(0));
             }
-            rv.addItemDecoration(new GridLayoutManagerDivider(Color.parseColor("#e69310"), 10));
+            rv.addItemDecoration(new GridLayoutManagerDivider(Color.parseColor("#e69310"), 10, true));
             rv.setAdapter(gridRVAdapter);
         }
     }
