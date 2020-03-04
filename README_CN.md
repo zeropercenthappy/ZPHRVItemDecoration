@@ -65,7 +65,7 @@
   divider.addHeaderView(headerView);
   divider.addFooterView(footerView);
   //
-rv.addItemDecoration(divider);
+  rv.addItemDecoration(divider);
   ```
   
   ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
