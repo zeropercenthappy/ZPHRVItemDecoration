@@ -92,7 +92,7 @@ Add the dependency in your module's build.gradle:
 ```groovy
 dependencies {
     // For android compat version
-	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
     // For androidX version
     implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
 }
