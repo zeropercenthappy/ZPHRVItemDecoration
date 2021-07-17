@@ -91,11 +91,18 @@ Add the dependency in your module's build.gradle:
 
 ```groovy
 dependencies {
+    // For android compat version
 	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
+    // For androidX version
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
 }
 ```
 
 ## Change log
+
+- 1.1.0
+
+  Migrate to AndroidX.
 
 - 1.0.9
 

@@ -91,11 +91,18 @@ allprojects {
 
 ```groovy
 dependencies {
+    // 对于android compat版本
 	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
+    // 对于androidX版本
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
 }
 ```
 
 ## 更新日志
+
+- 1.1.0
+
+  迁移至AndroidX。
 
 - 1.0.9
 
