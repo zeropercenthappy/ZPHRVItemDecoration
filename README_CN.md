@@ -92,7 +92,7 @@ allprojects {
 ```groovy
 dependencies {
     // 对于android compat版本
-	implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
     // 对于androidX版本
     implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
 }
