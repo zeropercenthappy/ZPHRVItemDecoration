@@ -3,11 +3,10 @@ package com.zeropercenthappy.divider
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.annotation.ColorInt
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
 class LinearLayoutManagerDivider(
@@ -27,7 +26,7 @@ class LinearLayoutManagerDivider(
     private val headerViewList = arrayListOf<View>()
     private val footerViewList = arrayListOf<View>()
     private var fullWrap = true
-    private var orientation: Int = LinearLayoutManager.VERTICAL
+    private var orientation: Int = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 
     init {
         paint.isAntiAlias = true
@@ -35,7 +34,11 @@ class LinearLayoutManagerDivider(
         paint.color = dividerColor
     }
 
-    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+    override fun onDraw(
+        canvas: Canvas,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         if (fullWrap) {
             drawFullWrap(canvas, parent)
         } else {
@@ -55,7 +58,7 @@ class LinearLayoutManagerDivider(
                 continue
             }
             // 绘制分割线
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 上边
                 canvas.drawRect(
                     childView.left.toFloat(),
@@ -95,7 +98,11 @@ class LinearLayoutManagerDivider(
     /**
      * 根据item的偏移量绘制分割线
      */
-    private fun drawNotFullWrap(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+    private fun drawNotFullWrap(
+        canvas: Canvas,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         for (i in 0 until parent.childCount) {
             val childView = parent.getChildAt(i)
             // HeaderView和FooterView不处理
@@ -105,10 +112,11 @@ class LinearLayoutManagerDivider(
             // 排除HeaderView和FooterView后，计算真实列表中的ChildView数量
             val realItemCount = state.itemCount - headerViewList.size - footerViewList.size
             // 找到当前ChildView在真实列表中的position（从1数起）
-            val positionInLinear = parent.getChildLayoutPosition(childView) + 1 - headerViewList.size
+            val positionInLinear =
+                parent.getChildLayoutPosition(childView) + 1 - headerViewList.size
             // 根据偏移量绘制分割线
             val offsetRect = getNotFullWrapOffsets(positionInLinear, realItemCount)
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 上边
                 canvas.drawRect(
                     childView.left.toFloat(),
@@ -146,9 +154,14 @@ class LinearLayoutManagerDivider(
         }
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         val layoutManager = parent.layoutManager
-        require(layoutManager is LinearLayoutManager) {
+        require(layoutManager is androidx.recyclerview.widget.LinearLayoutManager) {
             "LinearLayoutManagerDivider can only use with LinearLayoutManager"
         }
         orientation = layoutManager.orientation
@@ -190,7 +203,7 @@ class LinearLayoutManagerDivider(
         var bottomOffset = 0
         // 上下偏移量
         if (total == 1) {
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 同时是第一行和最后一行，即只有一行
                 topOffset = dividerWidth
                 bottomOffset = dividerWidth
@@ -200,7 +213,7 @@ class LinearLayoutManagerDivider(
                 rightOffset = dividerWidth
             }
         } else if (position == 1) {
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 第一行
                 topOffset = dividerWidth
                 bottomOffset = (1f / total * dividerWidth).roundToInt()
@@ -211,7 +224,7 @@ class LinearLayoutManagerDivider(
             }
 
         } else if (position == total) {
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 最后一行
                 topOffset = (1f / total * dividerWidth).roundToInt()
                 bottomOffset = dividerWidth
@@ -221,7 +234,7 @@ class LinearLayoutManagerDivider(
                 rightOffset = dividerWidth
             }
         } else {
-            if (orientation == LinearLayoutManager.VERTICAL) {
+            if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
                 // 中间行
                 topOffset = ((total + 1f - position) / total * dividerWidth).roundToInt()
                 bottomOffset = (position.toFloat() / total * dividerWidth).roundToInt()
@@ -245,7 +258,7 @@ class LinearLayoutManagerDivider(
         var topOffset = 0
         var rightOffset = 0
         var bottomOffset = 0
-        if (orientation == LinearLayoutManager.VERTICAL) {
+        if (orientation == androidx.recyclerview.widget.LinearLayoutManager.VERTICAL) {
             // 上下偏移量
             when {
                 total == 1 -> {
@@ -266,7 +279,8 @@ class LinearLayoutManagerDivider(
                 else -> {
                     // 中间行
                     topOffset = ((position - 1f) / total * dividerWidth).roundToInt()
-                    bottomOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
+                    bottomOffset =
+                        (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
                 }
             }
         } else {
@@ -290,7 +304,8 @@ class LinearLayoutManagerDivider(
                 else -> {
                     // 中间列
                     leftOffset = ((position - 1f) / total * dividerWidth).roundToInt()
-                    rightOffset = (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
+                    rightOffset =
+                        (((total - 1f) - (position - 1f)) / total * dividerWidth).roundToInt()
                 }
             }
         }

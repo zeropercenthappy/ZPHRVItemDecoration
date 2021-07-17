@@ -3,11 +3,10 @@ package com.zeropercenthappy.divider
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.annotation.ColorInt
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
 class GridLayoutManagerDivider(
@@ -144,9 +143,14 @@ class GridLayoutManagerDivider(
         }
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         val layoutManager = parent.layoutManager
-        require(layoutManager is GridLayoutManager && layoutManager.orientation == GridLayoutManager.VERTICAL) {
+        require(layoutManager is androidx.recyclerview.widget.GridLayoutManager && layoutManager.orientation == androidx.recyclerview.widget.GridLayoutManager.VERTICAL) {
             "GridLayoutManagerDivider can only use with vertical GridLayoutManager"
         }
         // HeaderView和FooterView不设置偏移量
@@ -223,7 +227,8 @@ class GridLayoutManagerDivider(
         } else {
             // 中间列
             val atColumn = atColumn(position, spanCount)
-            leftOffset = ((spanCount + 1f - atColumn) / spanCount * verticalDividerWidth).roundToInt()
+            leftOffset =
+                ((spanCount + 1f - atColumn) / spanCount * verticalDividerWidth).roundToInt()
             rightOffset = (atColumn.toFloat() / spanCount * verticalDividerWidth).roundToInt()
         }
         // 计算完毕
@@ -260,7 +265,8 @@ class GridLayoutManagerDivider(
             // 中间行
             val atRow = atRow(position, spanCount)
             topOffset = ((atRow - 1f) / rowCount * horizontalDividerHeight).roundToInt()
-            bottomOffset = (((rowCount - 1f) - (atRow - 1f)) / rowCount * horizontalDividerHeight).roundToInt()
+            bottomOffset =
+                (((rowCount - 1f) - (atRow - 1f)) / rowCount * horizontalDividerHeight).roundToInt()
         }
         // 左右偏移量
         if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
@@ -279,7 +285,8 @@ class GridLayoutManagerDivider(
             // 中间列
             val atColumn = atColumn(position, spanCount)
             leftOffset = ((atColumn - 1f) / spanCount * verticalDividerWidth).roundToInt()
-            rightOffset = (((spanCount - 1f) - (atColumn - 1f)) / spanCount * verticalDividerWidth).roundToInt()
+            rightOffset =
+                (((spanCount - 1f) - (atColumn - 1f)) / spanCount * verticalDividerWidth).roundToInt()
         }
 
         // 计算完毕
@@ -369,7 +376,12 @@ class GridLayoutManagerDivider(
      * 在真实表格中，判断position（从1开始）是否在最后一列
      * @param isCountLastItem 是否将最后一个item不是最后一列来当作最后一列处理
      */
-    private fun isLastColumn(position: Int, spanCount: Int, total: Int, isCountLastItem: Boolean = false): Boolean {
+    private fun isLastColumn(
+        position: Int,
+        spanCount: Int,
+        total: Int,
+        isCountLastItem: Boolean = false
+    ): Boolean {
         return when {
             spanCount == 1 -> {
                 // 只有一列
@@ -410,7 +422,7 @@ class GridLayoutManagerDivider(
     private fun getSpanCount(parent: RecyclerView): Int {
         val spanCount: Int
         val layoutManager = parent.layoutManager
-        spanCount = (layoutManager as GridLayoutManager).spanCount
+        spanCount = (layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount
         return spanCount
     }
 
