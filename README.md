@@ -59,7 +59,7 @@
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
   // if you want to set a different size of divider:
-  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, false);
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, verticalDividerWidth, false);
   // if you have header view or footer view.
   // it will not influence layout, only use for calculate.
   divider.addHeaderView(headerView);
