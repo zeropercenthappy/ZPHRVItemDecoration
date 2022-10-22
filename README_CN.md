@@ -59,7 +59,7 @@
   ```java
   GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, dividerWidth, false);
   // 如果你想为横向和竖向的分割线设置不同的size：
-  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, horizontalDividerHeight, false);
+  GridLayoutManagerDivider divider = new GridLayoutManagerDivider(color, horizontalDividerHeight, verticalDividerWidth, false);
   // 如果RecyclerView有HeaderView或FooterView（不需要绘制分割线）
   // 按下面的方法添加进Divider中（不会影响UI，仅用于计算）
   divider.addHeaderView(headerView);
