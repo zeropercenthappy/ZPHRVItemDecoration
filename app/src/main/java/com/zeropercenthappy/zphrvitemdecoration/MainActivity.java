@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.zeropercenthappy.divider.GridLayoutManagerDivider;
 import com.zeropercenthappy.divider.LinearLayoutManagerDivider;
+import com.zeropercenthappy.divider.StaggeredGridLayoutManagerDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 staggeredRVAdapter.setOrientation(currentOrientation);
                 rv.setLayoutManager(new StaggeredGridLayoutManager(SPAN_COUNT, currentOrientation));
                 rv.setAdapter(staggeredRVAdapter);
-                // library暂不支持StaggeredGridLayoutManager的分割线，留空
+                rv.addItemDecoration(new StaggeredGridLayoutManagerDivider(DIVIDER_COLOR, DIVIDER_SIZE, fullWrap));
                 break;
             default:
                 linearRVAdapter.setOrientation(currentOrientation);
@@ -198,12 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         String orientation = currentOrientation == LinearLayoutManager.VERTICAL ? "纵向" : "横向";
-        String divider;
-        if (currentType == TYPE_LINEAR || currentType == TYPE_GRID) {
-            divider = fullWrap ? "FullWrap" : "NotFullWrap";
-        } else {
-            divider = "暂无分割线实现";
-        }
+        String divider = fullWrap ? "FullWrap" : "NotFullWrap";
         btnFullWrap.setText(fullWrap ? "FullWrap: on" : "FullWrap: off");
         tvStatus.setText(String.format("%s / %s / %s / item: %d",
                 type, orientation, divider, entityList.size()));

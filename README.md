@@ -70,6 +70,38 @@
 
   ![GridLayoutManager](https://github.com/zeropercenthappy/ZPHRVItemDecoration/blob/master/screenshots/GridLayoutManagerDivider.png)
 
+### StaggeredGridLayoutManager
+
+#### Usage
+
+- Full Wrap:
+
+  ```java
+  StaggeredGridLayoutManagerDivider divider = new StaggeredGridLayoutManagerDivider(color, dividerSize, true);
+  // if you want to set a different size of divider:
+  StaggeredGridLayoutManagerDivider divider = new StaggeredGridLayoutManagerDivider(color, horizontalDividerHeight, verticalDividerWidth, true);
+  // if you have header view or footer view.
+  // it will not influence layout, only use for calculate.
+  divider.addHeaderView(headerView);
+  divider.addFooterView(footerView);
+  //
+  rv.addItemDecoration(divider);
+  ```
+
+- Not Full Wrap:
+
+  ```java
+  StaggeredGridLayoutManagerDivider divider = new StaggeredGridLayoutManagerDivider(color, dividerSize, false);
+  // if you want to set a different size of divider:
+  StaggeredGridLayoutManagerDivider divider = new StaggeredGridLayoutManagerDivider(color, horizontalDividerHeight, verticalDividerWidth, false);
+  // if you have header view or footer view.
+  // it will not influence layout, only use for calculate.
+  divider.addHeaderView(headerView);
+  divider.addFooterView(footerView);
+  //
+  rv.addItemDecoration(divider);
+  ```
+
 ## Download
 
 ### Step 1.

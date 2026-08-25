@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 public class StaggeredRVAdapter extends RecyclerView.Adapter<StaggeredRVAdapter.ViewHolder> {
-    // 瀑布流暂无分割线实现，用交替色区分相邻item的边界
+    // 用交替色区分相邻item的边界，方便观察分割线效果
     private static final int[] ITEM_COLORS = {
             android.R.color.holo_blue_bright,
             android.R.color.holo_green_light,
