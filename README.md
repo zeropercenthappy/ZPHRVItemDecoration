@@ -123,14 +123,18 @@ Add the dependency in your module's build.gradle:
 
 ```groovy
 dependencies {
-    // For android compat version
+    // For android compat version（deprecated）
     implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
     // For androidX version
-    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.1'
 }
 ```
 
 ## Change log
+
+- 1.1.1
+  1. Support horizontal GridLayoutManager;
+  2. Add StaggeredGridLayoutManagerDivider;
 
 - 1.1.0
 

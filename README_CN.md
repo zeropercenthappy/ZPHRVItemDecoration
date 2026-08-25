@@ -123,14 +123,18 @@ allprojects {
 
 ```groovy
 dependencies {
-    // 对于android compat版本
+    // 对于android compat版本（已废弃）
     implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
     // 对于androidX版本
-    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.0'
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.1'
 }
 ```
 
 ## 更新日志
+
+- 1.1.1
+  1. 支持 horizontal 方向的 GridLayoutManager；
+  2. 新增 StaggeredGridLayoutManagerDivider；
 
 - 1.1.0
 
