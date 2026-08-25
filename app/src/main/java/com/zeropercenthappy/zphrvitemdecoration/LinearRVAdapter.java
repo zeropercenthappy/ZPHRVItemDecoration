@@ -1,5 +1,6 @@
 package com.zeropercenthappy.zphrvitemdecoration;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class LinearRVAdapter extends RecyclerView.Adapter<LinearRVAdapter.ViewHolder> {
     private List<String> entityList;
+    private int orientation = LinearLayoutManager.VERTICAL;
 
     public List<String> getEntityList() {
         return entityList;
@@ -24,10 +26,22 @@ public class LinearRVAdapter extends RecyclerView.Adapter<LinearRVAdapter.ViewHo
         this.entityList = entityList;
     }
 
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return orientation;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId = viewType == LinearLayoutManager.HORIZONTAL
+                ? R.layout.item_rv_linear_horizontal
+                : R.layout.item_rv_linear;
         View rootView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_rv_linear, parent, false);
+                .inflate(layoutId, parent, false);
         return new ViewHolder(rootView);
     }
 

@@ -1,72 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.zeropercenthappy.zphrvitemdecoration.MainActivity">
 
-    <Button
-        android:id="@+id/btn_linear"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LinearLayoutManager"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_linear_full_wrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LinearLayoutManagerFullWrap"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_linear" />
+        <Button
+            android:id="@+id/btn_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Linear"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btn_grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GridLayoutManager"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_linear_full_wrap" />
+        <Button
+            android:id="@+id/btn_grid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Grid"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btn_grid_full_wrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GridLayoutManagerFullWrap"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_grid" />
+        <Button
+            android:id="@+id/btn_staggered"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Staggered"
+            android:textAllCaps="false" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_minus"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Minus"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_grid_full_wrap" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vertical"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Horizontal"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@id/btn_minus"
-        app:layout_constraintTop_toBottomOf="@id/btn_grid_full_wrap" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_full_wrap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="FullWrap: off"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_minus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Minus"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:textSize="12sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_add" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_weight="1" />
+</LinearLayout>
