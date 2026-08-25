@@ -26,6 +26,7 @@ class GridLayoutManagerDivider(
     private val paint: Paint = Paint()
     private val headerViewList = arrayListOf<View>()
     private val footerViewList = arrayListOf<View>()
+    private var orientation: Int = androidx.recyclerview.widget.GridLayoutManager.VERTICAL
 
     init {
         paint.isAntiAlias = true
@@ -101,36 +102,78 @@ class GridLayoutManagerDivider(
             val positionInGrid = parent.getChildLayoutPosition(childView) + 1 - headerViewList.size
             // 根据偏移量绘制分割线
             val offsetRect = getNotFullWrapOffSets(positionInGrid, spanCount, realItemCount)
-            // 左边
-            canvas.drawRect(
-                (childView.left - offsetRect.left).toFloat(),
-                (childView.top - offsetRect.top).toFloat(),
-                childView.left.toFloat(),
-                (childView.bottom + offsetRect.bottom).toFloat(),
-                paint
-            )
-            // 右边
-            // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
-            // 右边的分割线只在非最后一个item才绘制
-            canvas.drawRect(
-                childView.right.toFloat(),
-                (childView.top - offsetRect.top).toFloat(),
-                (childView.right + verticalDividerWidth).toFloat(),
-                (childView.bottom + offsetRect.bottom).toFloat(),
-                paint
-            )
-            // 上边
-            // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
-            canvas.drawRect(
-                (childView.left - offsetRect.left).toFloat(),
-                (childView.top - offsetRect.top).toFloat(),
-                (childView.right + horizontalDividerHeight).toFloat(),
-                childView.top.toFloat(),
-                paint
-            )
-            // 下边
-            if (!isLastRow(positionInGrid, spanCount, realItemCount)) {
-                // 下边的分割线只在非最后一行才绘制
+            if (orientation == androidx.recyclerview.widget.GridLayoutManager.VERTICAL) {
+                // 纵向时，行为排布方向，列满spanCount
+                // 左边
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    childView.left.toFloat(),
+                    (childView.bottom + offsetRect.bottom).toFloat(),
+                    paint
+                )
+                // 右边
+                // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
+                // 右边的分割线只在非最后一个item才绘制
+                canvas.drawRect(
+                    childView.right.toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    (childView.right + verticalDividerWidth).toFloat(),
+                    (childView.bottom + offsetRect.bottom).toFloat(),
+                    paint
+                )
+                // 上边
+                // 分割线的右端绘制到从item的右侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    (childView.right + horizontalDividerHeight).toFloat(),
+                    childView.top.toFloat(),
+                    paint
+                )
+                // 下边
+                if (!isLastGroup(positionInGrid, spanCount, realItemCount)) {
+                    // 下边的分割线只在非最后一行才绘制
+                    // 并且绘制满宽度分割线，以解决未排满spanCount时的分割线绘制不准确问题
+                    canvas.drawRect(
+                        (childView.left - offsetRect.left).toFloat(),
+                        childView.bottom.toFloat(),
+                        (childView.right + offsetRect.right).toFloat(),
+                        (childView.bottom + horizontalDividerHeight).toFloat(),
+                        paint
+                    )
+                }
+            } else {
+                // 横向时，列为排布方向，行满spanCount
+                // 左边
+                // 分割线的下端绘制到从item的下侧+分割线宽度为止，以解决未排满spanCount时的分割线绘制不准确问题
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    childView.left.toFloat(),
+                    (childView.bottom + verticalDividerWidth).toFloat(),
+                    paint
+                )
+                // 右边
+                // 右边的分割线只在非最后一列才绘制
+                if (!isLastGroup(positionInGrid, spanCount, realItemCount)) {
+                    canvas.drawRect(
+                        childView.right.toFloat(),
+                        (childView.top - offsetRect.top).toFloat(),
+                        (childView.right + verticalDividerWidth).toFloat(),
+                        (childView.bottom + offsetRect.bottom).toFloat(),
+                        paint
+                    )
+                }
+                // 上边
+                canvas.drawRect(
+                    (childView.left - offsetRect.left).toFloat(),
+                    (childView.top - offsetRect.top).toFloat(),
+                    (childView.right + offsetRect.right).toFloat(),
+                    childView.top.toFloat(),
+                    paint
+                )
+                // 下边
                 // 并且绘制满宽度分割线，以解决未排满spanCount时的分割线绘制不准确问题
                 canvas.drawRect(
                     (childView.left - offsetRect.left).toFloat(),
@@ -150,9 +193,10 @@ class GridLayoutManagerDivider(
         state: RecyclerView.State
     ) {
         val layoutManager = parent.layoutManager
-        require(layoutManager is androidx.recyclerview.widget.GridLayoutManager && layoutManager.orientation == androidx.recyclerview.widget.GridLayoutManager.VERTICAL) {
-            "GridLayoutManagerDivider can only use with vertical GridLayoutManager"
+        require(layoutManager is androidx.recyclerview.widget.GridLayoutManager) {
+            "GridLayoutManagerDivider can only use with GridLayoutManager"
         }
+        orientation = layoutManager.orientation
         // HeaderView和FooterView不设置偏移量
         if (isHeader(view) || isFooter(view)) {
             outRect.set(0, 0, 0, 0)
@@ -170,9 +214,9 @@ class GridLayoutManagerDivider(
         } else {
             outRect.set(getNotFullWrapOffSets(positionInGrid, spanCount, realItemCount))
         }
-        // 第一次计算真实表格第二行第一个item的偏移量后，重新计算第一行的item的偏移量
-        // 因为第一行的item在第一次计算时，是当作同时是第一行和最后一行计算的
-        // 所以开始出现第二行时，要重新计算一次第一行
+        // 第一次计算真实表格第二组第一个item（纵向为第二行第一个item，横向为第二列第一个item）的偏移量后，重新计算第一组item的偏移量
+        // 因为第一组的item在第一次计算时，是当作同时是第一组和最后一组计算的
+        // 所以开始出现第二组时，要重新计算一次第一组
         if (realItemCount == spanCount + 1) {
             parent.postDelayed({
                 for (i in headerViewList.size + 0 until headerViewList.size + spanCount) {
@@ -187,49 +231,95 @@ class GridLayoutManagerDivider(
      */
     private fun getFullWrapOffsets(position: Int, spanCount: Int, total: Int): Rect {
         val rect = Rect()
-        val rowCount = getRowCount(spanCount, total)
+        val groupCount = getGroupCount(spanCount, total)
         var leftOffset = 0
         var topOffset = 0
         var rightOffset = 0
         var bottomOffset = 0
-        // 上下偏移量
-        if (isFirstRow(position, spanCount) && isLastRow(position, spanCount, total)) {
-            // 同时是第一行和最后一行，即只有一行
-            topOffset = horizontalDividerHeight
-            bottomOffset = horizontalDividerHeight
-        } else if (isFirstRow(position, spanCount)) {
-            // 第一行
-            topOffset = horizontalDividerHeight
-            bottomOffset = (1f / rowCount * horizontalDividerHeight).roundToInt()
-        } else if (isLastRow(position, spanCount, total)) {
-            // 最后一行
-            topOffset = (1f / rowCount * horizontalDividerHeight).roundToInt()
-            bottomOffset = horizontalDividerHeight
+        if (orientation == androidx.recyclerview.widget.GridLayoutManager.VERTICAL) {
+            // 纵向时，组为行，组内序号为列
+            // 上下偏移量
+            if (isFirstGroup(position, spanCount) && isLastGroup(position, spanCount, total)) {
+                // 同时是第一行和最后一行，即只有一行
+                topOffset = horizontalDividerHeight
+                bottomOffset = horizontalDividerHeight
+            } else if (isFirstGroup(position, spanCount)) {
+                // 第一行
+                topOffset = horizontalDividerHeight
+                bottomOffset = (1f / groupCount * horizontalDividerHeight).roundToInt()
+            } else if (isLastGroup(position, spanCount, total)) {
+                // 最后一行
+                topOffset = (1f / groupCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = horizontalDividerHeight
+            } else {
+                // 中间行
+                val atRow = atGroup(position, spanCount)
+                topOffset =
+                    ((groupCount + 1f - atRow) / groupCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = (atRow.toFloat() / groupCount * horizontalDividerHeight).roundToInt()
+            }
+            // 左右偏移量
+            if (isFirstInGroup(position, spanCount) && isLastInGroup(position, spanCount, total)) {
+                // 同时是第一列和最后一列，即只有一列
+                leftOffset = verticalDividerWidth
+                rightOffset = verticalDividerWidth
+            } else if (isFirstInGroup(position, spanCount)) {
+                // 第一列
+                leftOffset = verticalDividerWidth
+                rightOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
+            } else if (isLastInGroup(position, spanCount, total, false)) {
+                // 最后一列
+                leftOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
+                rightOffset = verticalDividerWidth
+            } else {
+                // 中间列
+                val atColumn = atInGroup(position, spanCount)
+                leftOffset =
+                    ((spanCount + 1f - atColumn) / spanCount * verticalDividerWidth).roundToInt()
+                rightOffset = (atColumn.toFloat() / spanCount * verticalDividerWidth).roundToInt()
+            }
         } else {
-            // 中间行
-            val atRow = atRow(position, spanCount)
-            topOffset = ((rowCount + 1f - atRow) / rowCount * horizontalDividerHeight).roundToInt()
-            bottomOffset = (atRow.toFloat() / rowCount * horizontalDividerHeight).roundToInt()
-        }
-        // 左右偏移量
-        if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
-            // 同时是第一列和最后一列，即只有一列
-            leftOffset = verticalDividerWidth
-            rightOffset = verticalDividerWidth
-        } else if (isFirstColumn(position, spanCount)) {
-            // 第一列
-            leftOffset = verticalDividerWidth
-            rightOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
-        } else if (isLastColumn(position, spanCount, total, false)) {
-            // 最后一列
-            leftOffset = (1f / spanCount * verticalDividerWidth).roundToInt()
-            rightOffset = verticalDividerWidth
-        } else {
-            // 中间列
-            val atColumn = atColumn(position, spanCount)
-            leftOffset =
-                ((spanCount + 1f - atColumn) / spanCount * verticalDividerWidth).roundToInt()
-            rightOffset = (atColumn.toFloat() / spanCount * verticalDividerWidth).roundToInt()
+            // 横向时，组为列，组内序号为行
+            // 左右偏移量
+            if (isFirstGroup(position, spanCount) && isLastGroup(position, spanCount, total)) {
+                // 同时是第一列和最后一列，即只有一列
+                leftOffset = verticalDividerWidth
+                rightOffset = verticalDividerWidth
+            } else if (isFirstGroup(position, spanCount)) {
+                // 第一列
+                leftOffset = verticalDividerWidth
+                rightOffset = (1f / groupCount * verticalDividerWidth).roundToInt()
+            } else if (isLastGroup(position, spanCount, total)) {
+                // 最后一列
+                leftOffset = (1f / groupCount * verticalDividerWidth).roundToInt()
+                rightOffset = verticalDividerWidth
+            } else {
+                // 中间列
+                val atColumn = atGroup(position, spanCount)
+                leftOffset =
+                    ((groupCount + 1f - atColumn) / groupCount * verticalDividerWidth).roundToInt()
+                rightOffset = (atColumn.toFloat() / groupCount * verticalDividerWidth).roundToInt()
+            }
+            // 上下偏移量
+            if (isFirstInGroup(position, spanCount) && isLastInGroup(position, spanCount, total)) {
+                // 同时是第一行和最后一行，即只有一行
+                topOffset = horizontalDividerHeight
+                bottomOffset = horizontalDividerHeight
+            } else if (isFirstInGroup(position, spanCount)) {
+                // 第一行
+                topOffset = horizontalDividerHeight
+                bottomOffset = (1f / spanCount * horizontalDividerHeight).roundToInt()
+            } else if (isLastInGroup(position, spanCount, total, false)) {
+                // 最后一行
+                topOffset = (1f / spanCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = horizontalDividerHeight
+            } else {
+                // 中间行
+                val atRow = atInGroup(position, spanCount)
+                topOffset =
+                    ((spanCount + 1f - atRow) / spanCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = (atRow.toFloat() / spanCount * horizontalDividerHeight).roundToInt()
+            }
         }
         // 计算完毕
         rect.set(leftOffset, topOffset, rightOffset, bottomOffset)
@@ -241,52 +331,97 @@ class GridLayoutManagerDivider(
      */
     private fun getNotFullWrapOffSets(position: Int, spanCount: Int, total: Int): Rect {
         val rect = Rect()
-        val rowCount = getRowCount(spanCount, total)
+        val groupCount = getGroupCount(spanCount, total)
 
         var leftOffset = 0
         var topOffset = 0
         var rightOffset = 0
         var bottomOffset = 0
 
-        // 上下偏移量
-        if (isFirstRow(position, spanCount) && isLastRow(position, spanCount, total)) {
-            // 同时是第一行和最后一行，即只有一行
-            topOffset = 0
-            bottomOffset = 0
-        } else if (isFirstRow(position, spanCount)) {
-            // 第一行
-            topOffset = 0
-            bottomOffset = ((rowCount - 1f) / rowCount * horizontalDividerHeight).roundToInt()
-        } else if (isLastRow(position, spanCount, total)) {
-            // 最后一行
-            topOffset = ((rowCount - 1f) / rowCount * horizontalDividerHeight).roundToInt()
-            bottomOffset = 0
+        if (orientation == androidx.recyclerview.widget.GridLayoutManager.VERTICAL) {
+            // 纵向时，组为行，组内序号为列
+            // 上下偏移量
+            if (isFirstGroup(position, spanCount) && isLastGroup(position, spanCount, total)) {
+                // 同时是第一行和最后一行，即只有一行
+                topOffset = 0
+                bottomOffset = 0
+            } else if (isFirstGroup(position, spanCount)) {
+                // 第一行
+                topOffset = 0
+                bottomOffset = ((groupCount - 1f) / groupCount * horizontalDividerHeight).roundToInt()
+            } else if (isLastGroup(position, spanCount, total)) {
+                // 最后一行
+                topOffset = ((groupCount - 1f) / groupCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = 0
+            } else {
+                // 中间行
+                val atRow = atGroup(position, spanCount)
+                topOffset = ((atRow - 1f) / groupCount * horizontalDividerHeight).roundToInt()
+                bottomOffset =
+                    (((groupCount - 1f) - (atRow - 1f)) / groupCount * horizontalDividerHeight).roundToInt()
+            }
+            // 左右偏移量
+            if (isFirstInGroup(position, spanCount) && isLastInGroup(position, spanCount, total)) {
+                // 同时是第一列和最后一列，即只有一列
+                leftOffset = 0
+                rightOffset = 0
+            } else if (isFirstInGroup(position, spanCount)) {
+                // 第一列
+                leftOffset = 0
+                rightOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
+            } else if (isLastInGroup(position, spanCount, total, false)) {
+                // 最后一列
+                leftOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
+                rightOffset = 0
+            } else {
+                // 中间列
+                val atColumn = atInGroup(position, spanCount)
+                leftOffset = ((atColumn - 1f) / spanCount * verticalDividerWidth).roundToInt()
+                rightOffset =
+                    (((spanCount - 1f) - (atColumn - 1f)) / spanCount * verticalDividerWidth).roundToInt()
+            }
         } else {
-            // 中间行
-            val atRow = atRow(position, spanCount)
-            topOffset = ((atRow - 1f) / rowCount * horizontalDividerHeight).roundToInt()
-            bottomOffset =
-                (((rowCount - 1f) - (atRow - 1f)) / rowCount * horizontalDividerHeight).roundToInt()
-        }
-        // 左右偏移量
-        if (isFirstColumn(position, spanCount) && isLastColumn(position, spanCount, total)) {
-            // 同时是第一列和最后一列，即只有一列
-            leftOffset = 0
-            rightOffset = 0
-        } else if (isFirstColumn(position, spanCount)) {
-            // 第一列
-            leftOffset = 0
-            rightOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
-        } else if (isLastColumn(position, spanCount, total, false)) {
-            // 最后一列
-            leftOffset = ((spanCount - 1f) / spanCount * verticalDividerWidth).roundToInt()
-            rightOffset = 0
-        } else {
-            // 中间列
-            val atColumn = atColumn(position, spanCount)
-            leftOffset = ((atColumn - 1f) / spanCount * verticalDividerWidth).roundToInt()
-            rightOffset =
-                (((spanCount - 1f) - (atColumn - 1f)) / spanCount * verticalDividerWidth).roundToInt()
+            // 横向时，组为列，组内序号为行
+            // 左右偏移量
+            if (isFirstGroup(position, spanCount) && isLastGroup(position, spanCount, total)) {
+                // 同时是第一列和最后一列，即只有一列
+                leftOffset = 0
+                rightOffset = 0
+            } else if (isFirstGroup(position, spanCount)) {
+                // 第一列
+                leftOffset = 0
+                rightOffset = ((groupCount - 1f) / groupCount * verticalDividerWidth).roundToInt()
+            } else if (isLastGroup(position, spanCount, total)) {
+                // 最后一列
+                leftOffset = ((groupCount - 1f) / groupCount * verticalDividerWidth).roundToInt()
+                rightOffset = 0
+            } else {
+                // 中间列
+                val atColumn = atGroup(position, spanCount)
+                leftOffset = ((atColumn - 1f) / groupCount * verticalDividerWidth).roundToInt()
+                rightOffset =
+                    (((groupCount - 1f) - (atColumn - 1f)) / groupCount * verticalDividerWidth).roundToInt()
+            }
+            // 上下偏移量
+            if (isFirstInGroup(position, spanCount) && isLastInGroup(position, spanCount, total)) {
+                // 同时是第一行和最后一行，即只有一行
+                topOffset = 0
+                bottomOffset = 0
+            } else if (isFirstInGroup(position, spanCount)) {
+                // 第一行
+                topOffset = 0
+                bottomOffset = ((spanCount - 1f) / spanCount * horizontalDividerHeight).roundToInt()
+            } else if (isLastInGroup(position, spanCount, total, false)) {
+                // 最后一行
+                topOffset = ((spanCount - 1f) / spanCount * horizontalDividerHeight).roundToInt()
+                bottomOffset = 0
+            } else {
+                // 中间行
+                val atRow = atInGroup(position, spanCount)
+                topOffset = ((atRow - 1f) / spanCount * horizontalDividerHeight).roundToInt()
+                bottomOffset =
+                    (((spanCount - 1f) - (atRow - 1f)) / spanCount * horizontalDividerHeight).roundToInt()
+            }
         }
 
         // 计算完毕
@@ -295,20 +430,20 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 计算真实表格的行数
+     * 计算真实表格的分组数（纵向时为行数，横向时为列数）
      */
-    private fun getRowCount(spanCount: Int, total: Int): Int {
+    private fun getGroupCount(spanCount: Int, total: Int): Int {
         return when {
             total <= spanCount -> {
-                // 小于一行
+                // 不足一个分组
                 1
             }
             total % spanCount != 0 -> {
-                // 多于一行且未排满定义的spanCount
+                // 多于一个分组且未排满定义的spanCount
                 total / spanCount + 1
             }
             else -> {
-                // 多于一行且刚好排满定义的spanCount
+                // 多于一个分组且刚好排满定义的spanCount
                 total / spanCount
             }
 
@@ -316,30 +451,30 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 在真实表格中，判断position（从1开始）是否在第一行
+     * 在真实表格中，判断position（从1开始）是否在第一个分组（纵向时为第一行，横向时为第一列）
      */
-    private fun isFirstRow(position: Int, spanCount: Int): Boolean {
+    private fun isFirstGroup(position: Int, spanCount: Int): Boolean {
         return position <= spanCount
     }
 
     /**
-     * 在真实表格中，判断position（从1开始）是否在最后一行
+     * 在真实表格中，判断position（从1开始）是否在最后一个分组（纵向时为最后一行，横向时为最后一列）
      */
-    private fun isLastRow(position: Int, spanCount: Int, total: Int): Boolean {
+    private fun isLastGroup(position: Int, spanCount: Int, total: Int): Boolean {
         return when {
             total <= spanCount -> {
-                // 只有一行
+                // 只有一个分组
                 true
             }
             total % spanCount == 0 -> {
-                // 多于一行
-                // 总数刚好将列数排满
+                // 多于一个分组
+                // 总数刚好将每个分组排满
                 position > (total / spanCount - 1) * spanCount
             }
             else -> {
-                // 多于一行
-                // 总数不够将列数排满
-                // 利用int/int向下取整，得到排满的行数，再乘以spanCount，算出最后一行的条件
+                // 多于一个分组
+                // 总数不够将最后一个分组排满
+                // 利用int/int向下取整，得到排满的分组数，再乘以spanCount，算出最后一组的条件
                 position > (total / spanCount) * spanCount
             }
 
@@ -347,9 +482,9 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 在真实表格中，计算指定position（从1开始）在第几行
+     * 在真实表格中，计算指定position（从1开始）在第几个分组（纵向时为行号，横向时为列号）
      */
-    private fun atRow(position: Int, spanCount: Int): Int {
+    private fun atGroup(position: Int, spanCount: Int): Int {
         return if (position % spanCount == 0) {
             position / spanCount
         } else {
@@ -358,12 +493,12 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 在真实表格中，判断position（从1开始）是否在第一列
+     * 在真实表格中，判断position（从1开始）是否为分组内的第一个（纵向时为第一列，横向时为第一行）
      */
-    private fun isFirstColumn(position: Int, spanCount: Int): Boolean {
+    private fun isFirstInGroup(position: Int, spanCount: Int): Boolean {
         return when (spanCount) {
             1 -> {
-                // 只有一列
+                // 分组内只有一个位置
                 true
             }
             else -> {
@@ -373,10 +508,10 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 在真实表格中，判断position（从1开始）是否在最后一列
-     * @param isCountLastItem 是否将最后一个item不是最后一列来当作最后一列处理
+     * 在真实表格中，判断position（从1开始）是否为分组内的最后一个（纵向时为最后一列，横向时为最后一行）
+     * @param isCountLastItem 是否将最后一个item当作分组内最后一个来处理
      */
-    private fun isLastColumn(
+    private fun isLastInGroup(
         position: Int,
         spanCount: Int,
         total: Int,
@@ -384,16 +519,14 @@ class GridLayoutManagerDivider(
     ): Boolean {
         return when {
             spanCount == 1 -> {
-                // 只有一列
+                // 分组内只有一个位置
                 true
             }
             position % spanCount == 0 -> {
-                // 大于一列
-                // position刚好处于定义最后一列上
+                // position刚好处于分组内最后一个位置上
                 true
             }
             (position == total && isCountLastItem) -> {
-                // 大于一列
                 // position是最后一个item
                 true
             }
@@ -404,16 +537,16 @@ class GridLayoutManagerDivider(
     }
 
     /**
-     * 在真实表格中，判断position（从1开始）在第几列
+     * 在真实表格中，计算指定position（从1开始）为分组内第几个（纵向时为列号，横向时为行号）
      */
-    private fun atColumn(position: Int, spanCount: Int): Int {
+    private fun atInGroup(position: Int, spanCount: Int): Int {
         return when {
             position % spanCount != 0 -> {
-                // 非最后一列
+                // 非分组内最后一个
                 position % spanCount
             }
             else -> {
-                // 最后一列
+                // 分组内最后一个
                 spanCount
             }
         }

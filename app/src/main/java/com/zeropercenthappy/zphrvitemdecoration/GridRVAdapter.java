@@ -15,13 +15,6 @@ import java.util.List;
  */
 
 public class GridRVAdapter extends RecyclerView.Adapter<GridRVAdapter.ViewHolder> {
-    // 横向Grid暂无分割线实现，用交替色区分相邻item的边界
-    private static final int[] HORIZONTAL_ITEM_COLORS = {
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light
-    };
 
     private List<String> entityList;
     private int orientation = LinearLayoutManager.VERTICAL;
@@ -56,11 +49,7 @@ public class GridRVAdapter extends RecyclerView.Adapter<GridRVAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageView iv = (ImageView) holder.getView(R.id.iv);
-        if (orientation == LinearLayoutManager.HORIZONTAL) {
-            iv.setImageResource(HORIZONTAL_ITEM_COLORS[position % HORIZONTAL_ITEM_COLORS.length]);
-        } else {
-            iv.setImageResource(R.color.colorPrimary);
-        }
+        iv.setImageResource(R.color.colorPrimary);
     }
 
     @Override

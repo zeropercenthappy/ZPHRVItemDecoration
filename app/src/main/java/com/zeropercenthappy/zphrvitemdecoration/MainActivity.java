@@ -159,10 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 gridRVAdapter.setOrientation(currentOrientation);
                 rv.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT, currentOrientation, false));
                 rv.setAdapter(gridRVAdapter);
-                if (currentOrientation == LinearLayoutManager.VERTICAL) {
-                    rv.addItemDecoration(new GridLayoutManagerDivider(DIVIDER_COLOR, DIVIDER_SIZE, fullWrap));
-                }
-                // library暂不支持横向GridLayoutManager的分割线，留空
+                rv.addItemDecoration(new GridLayoutManagerDivider(DIVIDER_COLOR, DIVIDER_SIZE, fullWrap));
                 break;
             case TYPE_STAGGERED:
                 staggeredRVAdapter.setOrientation(currentOrientation);
@@ -202,8 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         String orientation = currentOrientation == LinearLayoutManager.VERTICAL ? "纵向" : "横向";
         String divider;
-        if (currentType == TYPE_LINEAR
-                || (currentType == TYPE_GRID && currentOrientation == LinearLayoutManager.VERTICAL)) {
+        if (currentType == TYPE_LINEAR || currentType == TYPE_GRID) {
             divider = fullWrap ? "FullWrap" : "NotFullWrap";
         } else {
             divider = "暂无分割线实现";
