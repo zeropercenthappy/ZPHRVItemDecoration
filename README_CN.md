@@ -132,6 +132,9 @@ dependencies {
 
 ## 更新日志
 
+- 1.1.2
+  修复对 Brvah 的 Header、Footer 的判断问题；
+
 - 1.1.1
   1. 支持 horizontal 方向的 GridLayoutManager；
   2. 新增 StaggeredGridLayoutManagerDivider；

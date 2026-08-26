@@ -126,11 +126,14 @@ dependencies {
     // For android compat version（deprecated）
     implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.0.9'
     // For androidX version
-    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.1'
+    implementation 'com.github.zeropercenthappy:ZPHRVItemDecoration:1.1.2'
 }
 ```
 
 ## Change log
+
+- 1.1.2
+  Fix Brvah's header and footer calculate bug.
 
 - 1.1.1
   1. Support horizontal GridLayoutManager;
