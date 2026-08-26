@@ -594,7 +594,7 @@ class GridLayoutManagerDivider(
         // 兼容Brvah的addHeaderView方法设置的Header
         if (view is ViewGroup) {
             for (i in 0 until view.childCount) {
-                val chideView = view.getChildAt(0)
+                val chideView = view.getChildAt(i)
                 if (headerViewList.contains(chideView)) {
                     return true
                 }
@@ -612,7 +612,7 @@ class GridLayoutManagerDivider(
         // 兼容Brvah的addFooterView方法设置的Header
         if (view is ViewGroup) {
             for (i in 0 until view.childCount) {
-                val chideView = view.getChildAt(0)
+                val chideView = view.getChildAt(i)
                 if (footerViewList.contains(chideView)) {
                     return true
                 }
